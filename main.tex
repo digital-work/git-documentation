@@ -65,6 +65,22 @@ Start on GitHub, then pull it from Overleaf and your PC/Mac
 (Overleaf \leftarrow GitHub \rightarrow PC/Mac).
 
 \begin{enumerate}
+    \item Make a new repository on GitHub.
+    \item Copy the repository address on GitHub.
+    \item On your PC/Mac, navigate to the folder where you want to have the repository (or its parent folder).
+    \item Clone the GitHub repository into a new folder with the name of the git repository or into a specified folder:
+    \begin{verbatim}
+git clone <url-to-repository>
+git clone <url-to-repository> <path/name/of/folder>
+    \end{verbatim}
+    \item Get all branches and tags:
+    \begin{verbatim}
+#git fetch origin
+    \end{verbatim}
+    \item Check that all branches have been fetched:
+    \begin{verbatim}
+#git branch -a
+    \end{verbatim}
     \item Go to Overleaf and chose "Import from GitHub" under "New Project".
     \item Choose the repository you want to import.
 \end{enumerate}
