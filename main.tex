@@ -189,10 +189,18 @@ git push origin -u <new-name>
 I know these are not exactly branches but they might work the same way. This section might be moved, if it is getting to big.
 
 Make a new tag:
-\begin{verbatim}
+\begin{emunterate}
+    \item
+    \begin{verbatim}
 git tag <name>
 git tag <name> <short-sha>
-\end{verbatim}
+    \end{verbatim}
+    \item
+    \begin{verbatim}
+git push origin <name>
+git push origin --tags
+    \end{verbatim}
+\end{emunterate}
 
 Delete an existing tag:
 \begin{enumerate}
