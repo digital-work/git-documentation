@@ -20,14 +20,13 @@ This document contains some helpful commands that can be used in git.
 
 On your PC/Mac:
 \begin{verbatim}
-	git config --global user.email "email@example.com" \newline
-	got config --global user.name "John Doe"
+git config --global user.email "email@example.com" \newline
+got config --global user.name "John Doe"
 \end{verbatim}
 You can check that everything has been set correctly by typing
 \begin{verbatim}
-	got config --global user.name
+got config --global user.name
 \end{verbatim}
-\\
 
 On Overleaf:
 Go to Account\textgreater  Account Settings and add the email address. Confirm the address by opening the email that you received in your mailbox.
@@ -37,7 +36,7 @@ On GitHub:
 Go to Settings\textgreater  Emails and add the email address. Confirm the address by opening the email that you received in your mailbox. Choose a primary email address(, which is the one that is going to show up in your commits). OBS: Make sure that you did not mark the "Keep my email address private"-option. The name (that will actually show up in your commits) can be changed in your GitHub profile.
 
 \subsubsection{.gitignore}
-In many cases, you will have files in your local repository that you do not want to have committed because they are not useful, they are experimental or too big. In those cases you might want to create a .gitignore file in your folder and commit it to the repository. Git will know automatically that all the fiels that are listed in the .gitignore file are not supposed to be tracked for changes.
+In many cases, you will have files in your local repository that you do not want to have committed because they are not useful, they are experimental or too big. In those cases you might want to create a .gitignore file in your folder and commit it to the repository. Git will know automatically that all the fields that are listed in the .gitignore file are not supposed to be tracked for changes.
 
 \subsection{Cross-platform text documents}
 In case you want to version control a text document with GitHub, follow this tutorial.
@@ -52,7 +51,7 @@ In case you want to version control a text document with GitHub, follow this tut
     \item Open a terminal on your computer, create and navigate to the folder in which you want to clone the repository.
     \item Obtain the url to the repository on the GitHub page under "Clone or download" and write the following lines in the terminal: 
     \begin{verbatim}
-    git clone <path/to/github/repository> <folder>
+git clone <path/to/github/repository> <folder>
     \end{verbatim}
     (If no folder is specified, it will take the repository name as default name.)
 \end{enumerate}
@@ -69,8 +68,8 @@ Before committing new code, always make sure to update your local version from o
 
 \begin{enumerate}
     \item Make your changes and save with Ctrl + s / Cmd + s.
-    \item Update your Overleaf repository from origin by choosing the GitHuboption in the menu and choosing "Pull GitHub changes into Overleaf".
-    \item Choose the GitHub option in the menue and choose "Push Overleaf changes to GitHub". Write a comment and commit.
+    \item Update your Overleaf repository from origin by choosing the GitHub option in the menu and choosing "Pull GitHub changes into Overleaf".
+    \item Choose the GitHub option in the menu and choose "Push Overleaf changes to GitHub". Write a comment and commit.
 \end{enumerate}
 
 \subsubsection{From your PC/Mac}
@@ -83,19 +82,19 @@ cd <path\to\github\repository>
     \item Make your changes and save them.
     \item Update your local repository from origin:
 	\begin{verbatim}
-    git pull   
+git pull   
     \end{verbatim}
 	\item Stage the file(s) that have changes.
 	\begin{verbatim}
-    git add <name-of-file>
+git add <name-of-file>
     \end{verbatim}
 	\item Commit the changes to the local repository with a change comment:
 	\begin{verbatim}
-    git commit -m "Some useful and readable comment explaining the changes that you have made."
+git commit -m "Some useful and readable comment."
     \end{verbatim}
 	\item Push the changes to origin.
 	\begin{verbatim}
-    git push
+git push
     \end{verbatim}
 \end{enumerate}
 
@@ -104,11 +103,11 @@ cd <path\to\github\repository>
 \subsection{General commands}
 Making new branch:
 \begin{verbatim}
-    git branch <branch-name>
+git branch <branch-name>
 \end{verbatim}
 
 \begin{verbatim}
-    git branch -d <branch-name>
+git branch -d <branch-name>
 \end{verbatim}
 
 \subsection{Recurring bugs}
@@ -117,13 +116,10 @@ Making new branch:
 Explanation on https://stackoverflow.com/questions/30471557/git-push-master-fatal-you-are-not-currently-on-a-branch/30471627 or https://stackoverflow.com/questions/4735556/git-not-currently-on-any-branch-is-there-an-easy-way-to-get-back-on-a-branch.
 General idea:
 \begin{verbatim}
-    git branch <tmp-branch>
-	git checkout master
-	git merge <tmp-branch>
-	git push origin master
+git branch <tmp-branch>
+git checkout master
+git merge <tmp-branch>
+git push origin master
 \end{verbatim}
-
-
-
 
 \end{document}
