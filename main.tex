@@ -27,7 +27,7 @@ In case you want to version control a text document with GitHub, follow this tut
     \item Open a terminal on your computer, create and navigate to the folder in which you want to clone the repository.
     \item Obtain the url to the repository on the GitHub page under "Clone or download" and write the following lines in the terminal: 
     \begin{verbatim}
-    git clone <url-to-github-repository> <folder>    
+    git clone <path/to/github/repository> <folder>
     \end{verbatim}
     (If no folder is specified, it will take the repository name as default name.)
 \end{enumerate}
@@ -45,6 +45,32 @@ Before committing new code, always make sure to update your local version from o
 \begin{enumerate}
     \item Make your changes and save with Ctrl + s / Cmd + s.
     \item Choose the GitHub option in the menue and choose "Push Overleaf changes to GitHub". Write a comment and commit.
+\end{enumerate}
+
+\subsubsection{From your PC/Mac}
+All commands can be done from the command line after navigating to the folder containing the git repository:
+\begin{verbatim}
+cd <path\to\github\repository>
+\end{verbatim}
+
+\begin{enumerate}
+    \item Make your changes and save them.
+    \item Update your local repository from origin:
+	\begin{verbatim}
+    git pull   
+    \end{verbatim}
+	\item Stage the file(s) that have changes.
+	\begin{verbatim}
+    git add <name-of-file>
+    \end{verbatim}
+	\item Commit the changes to the local repository with a change comment:
+	\begin{verbatim}
+    git commit -m "Some useful and readable comment explaining the changes that you have made."
+    \end{verbatim}
+	\item Push the changes to origin.
+	\begin{verbatim}
+    git push
+    \end{verbatim}
 \end{enumerate}
 
 \end{document}
