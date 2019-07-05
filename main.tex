@@ -97,4 +97,31 @@ cd <path\to\github\repository>
     \end{verbatim}
 \end{enumerate}
 
+\section{Branches}
+
+\subsection{General commands}
+Making new branch:
+\begin{verbatim}
+    git branch <branch-name>
+\end{verbatim}
+
+\begin{verbatim}
+    git branch -d <branch-name>
+\end{verbatim}
+
+\subsection{Recurring bugs}
+
+"Git push master fatal: You are not currently on a branch"
+Explanation on https://stackoverflow.com/questions/30471557/git-push-master-fatal-you-are-not-currently-on-a-branch/30471627 or https://stackoverflow.com/questions/4735556/git-not-currently-on-any-branch-is-there-an-easy-way-to-get-back-on-a-branch.
+General idea:
+\begin{verbatim}
+    git branch <tmp-branch>
+	git checkout master
+	git merge <tmp-branch>
+	git push origin master
+\end{verbatim}
+
+
+
+
 \end{document}
