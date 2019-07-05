@@ -68,6 +68,26 @@ Start on GitHub, then pull it from Overleaf and your PC/Mac
 Start on your PC/Mac, then push to GitHub, and pull it from GitHub from Overleaf
 (PC/Mac \rightarrow GitHub \rightarrow Overleaf).
 
+\begin{enumerate}
+    \item Create a new project on you PC/Mac:
+    \begin{verbatim}
+git init
+    \end{verbatim}
+    \item Add files, make changes, commit to local repository.
+    \item Create a new and empty repository on GitHub. (No README file!)
+    \item Copy repository address.
+    \item Navigate to the git repository folder on your computer. 
+    \item Add the GitHub repository as a new origin to your local repository on your PC/Mac:
+    \begin{verbatim}
+git remote add origin <url-to-repository>
+    \end{verbatim}
+    \item Push all changes from your PC/Mac to GitHub including all branches and flags:
+    \begin{verbatim}
+git push --all origin
+git push --tags origin
+    \end{verbatim}
+\end{enumerate}
+
 \section{Maintaining the code}
 
 Before committing new code, always make sure to update your local version from origin first!
