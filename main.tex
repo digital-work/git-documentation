@@ -22,7 +22,7 @@ This document contains some helpful commands that can be used in git.
 
 On your PC/Mac:
 \begin{verbatim}
-git config --global user.email "email@example.com" \newline
+git config --global user.email "email@example.com"
 got config --global user.name "John Doe"
 \end{verbatim}
 You can check that everything has been set correctly by typing
@@ -97,11 +97,7 @@ git init
     \item Add files, make changes, commit to local repository.
     \item Create a new and empty repository on GitHub. (No README file!)
     \item Copy repository address.
-    \item Navigate to the git repository folder on your computer.
-    \item Remove existing origins from the repository:
-    \begin{verbatim}
-git remote rm origin
-    \end{verbatim}
+    \item Navigate to the git repository folder on your computer. 
     \item Add the GitHub repository as a new origin to your local repository on your PC/Mac:
     \begin{verbatim}
 git remote add origin <url-to-repository>
@@ -158,77 +154,13 @@ git push
 \section{Branches}
 
 \subsection{General commands}
-
-Make a new branch:
+Making new branch:
 \begin{verbatim}
 git branch <branch-name>
 \end{verbatim}
 
-Delete an existing branch:
 \begin{verbatim}
 git branch -d <branch-name>
-\end{verbatim}
-
-Rename an existing branch (https://multiplestates.wordpress.com/2015/02/05/rename-a-local-and-remote-branch-in-git/):
-\begin{enumerate}
-    \item Rename the branch in your local repository:
-    \begin{verbatim}
-git branch -m <old-name> <new-name>
-    \end{verbatim}
-    \item Push the new branch to remote:
-    \begin{verbatim}
-git push origin :<old-name> <new-name>
-    \end{verbatim}
-    \item 
-    \begin{verbatim}
-git push origin -u <new-name>
-    \end{verbatim}
-\end{enumerate}
-
-\subsection{Tags}
-I know these are not exactly branches but they might work the same way. This section might be moved, if it is getting to big.
-
-Make a new tag:
-\begin{verbatim}
-git tag <name>
-git tag <name> <short-sha>
-\end{verbatim}
-
-Delete an existing tag:
-\begin{enumerate}
-    \item 
-    \begin{verbatim}
-git tag -d <name>
-    \end{verbatim}
-    \item
-    \begin{verbatim}
-git push origin :refs/tags/<name>
-    \end{verbatim}
-\end{enumerate}
-
-Rename an existing tag (https://stackoverflow.com/questions/1028649/how-do-you-rename-a-git-tag):
-\begin{enumerate}
-    \item 
-    \begin{verbatim}
-git tag <new-name> <old-name>
-    \end{verbatim}
-    \item
-    \begin{verbatim}
-git tag -d <old-name>
-    \end{verbatim}
-    \item
-    \begin{verbatim}
-git push origin :refs/tags/<old-name>
-    \end{verbatim}
-    \item
-    \begin{verbatim}
-git push --tags
-    \end{verbatim}
-\end{enumerate}
-
-Remind all co-workers to run the following command:
-\begin{verbatim}
-git pull --prune --tags
 \end{verbatim}
 
 \subsection{Recurring bugs}
