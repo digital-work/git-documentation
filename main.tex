@@ -98,6 +98,10 @@ git init
     \item Create a new and empty repository on GitHub. (No README file!)
     \item Copy repository address.
     \item Navigate to the git repository folder on your computer. 
+    \item Remove existing origins from the repository:
+    \begin{verbatim}
+git remote rm origin
+    \end{verbatim}
     \item Add the GitHub repository as a new origin to your local repository on your PC/Mac:
     \begin{verbatim}
 git remote add origin <url-to-repository>
@@ -154,17 +158,16 @@ git push
 \section{Branches}
 
 \subsection{General commands}
-Making new branch:
+Make new branch:
 \begin{verbatim}
 git branch <branch-name>
 \end{verbatim}
 
+Delete an existing branch:
 \begin{verbatim}
 git branch -d <branch-name>
 \end{verbatim}
 
-<<<<<<< HEAD
-=======
 Rename an existing branch (https://multiplestates.wordpress.com/2015/02/05/rename-a-local-and-remote-branch-in-git/):
 \begin{enumerate}
     \item Rename the branch in your local repository:
@@ -235,7 +238,6 @@ Remind all co-workers to run the following command:
 git pull --prune --tags
 \end{verbatim}
 
->>>>>>> 59cc96404dfca9d8591f35d33497adf6ceffe4cf
 \subsection{Recurring bugs}
 
 "Git push master fatal: You are not currently on a branch"
