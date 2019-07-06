@@ -155,7 +155,51 @@ git push
     \end{verbatim}
 \end{enumerate}
 
+\section{Diffs and conflicts}
+In some cases, it is very helpful to see differences between specific commits and/or the current version of the repository.
+Likewise, it is very normal that you will encounter some conflicts while working on a projects with multiple contributors. Don't worry and follow these steps.
+
+\subsection{Tools}
+When comparing two states in git, we can use the default commands to get a patch of the main changes:
+\begin{verbatim}
+git diff
+git diff <sha-1> <sha-2>
+\end{verbatim}
+If you have add the changes already you will have to call the following command:
+\begin{verbatim}
+git diff HEAD
+\end{verbatim}
+This is very helpful, if we want to send a patch to a co-worker.
+
+However, this might be very clunky in some settings because we do not get a smoot visual representation of the changes. Thus, we might use common diff tools to visualize changes like TortoiseGit (Win), FileMerge (Mac) by using the following commands:
+\begin{verbatim}
+git difftool
+git difftool <sha-1> <sha-2>
+\end{verbatim}
+If you have add the changes already you will have to call the following command:
+\begin{verbatim}
+git difftool HEAD
+\end{verbatim}
+
+If you are doing this for the first time, you might have to set up an appropritate diff tool.
+On Mac, you might want to use FileMerge following these easy steps (https://stackoverflow.com/questions/21486481/is-it-possible-to-view-git-diffs-using-a-gui-side-by-side-tool-on-mac):
+\begin{enumerate}
+	\item Define FileMerge for the mergetool:
+	\begin{verbatim}
+git config --global merge.tool opendiff
+	\end{verbatim}
+	\item Define FileMerg for the difftool:
+	\begin{verbatim}
+git config --global diff.tool opendiff	
+	\end{verbatim}		
+	\item Suppress prompt at every comparison:
+	\begin{verbatim}
+git config --global diff.tool opendiff
+	\end{verbatim}	
+\end{enumerate}
+
 \section{Branches}
+Branches can be helpful when we have a main project, from which we derive minor side projects. A branch can stand by itself or merged again with the main branch ($master$).
 
 \subsection{General commands}
 Make new branch:
@@ -184,11 +228,23 @@ git push origin -u <new-name>
     \end{verbatim}
 \end{enumerate}
 
-\subsection{Tags}
-I know these are not exactly branches but they might work the same way. This section might be moved, if it is getting to big.
+\subsection{Recurring bugs}
+
+"Git push master fatal: You are not currently on a branch"
+Explanation on https://stackoverflow.com/questions/30471557/git-push-master-fatal-you-are-not-currently-on-a-branch/30471627 or https://stackoverflow.com/questions/4735556/git-not-currently-on-any-branch-is-there-an-easy-way-to-get-back-on-a-branch.
+General idea:
+\begin{verbatim}
+git branch <tmp-branch>
+git checkout master
+git merge <tmp-branch>
+git push origin master
+\end{verbatim}
+
+\section{Tags}
+Tags can be added to highlight specific releases. The can represent milestones, versions, etc.
 
 Make a new tag:
-\begin{emunterate}
+\begin{enumerate}
     \item
     \begin{verbatim}
 git tag <name>
@@ -199,7 +255,7 @@ git tag <name> <short-sha>
 git push origin <name>
 git push origin --tags
     \end{verbatim}
-\end{emunterate}
+\end{enumerate}
 
 Delete an existing tag:
 \begin{enumerate}
@@ -236,18 +292,6 @@ git push --tags
 Remind all co-workers to run the following command:
 \begin{verbatim}
 git pull --prune --tags
-\end{verbatim}
-
-\subsection{Recurring bugs}
-
-"Git push master fatal: You are not currently on a branch"
-Explanation on https://stackoverflow.com/questions/30471557/git-push-master-fatal-you-are-not-currently-on-a-branch/30471627 or https://stackoverflow.com/questions/4735556/git-not-currently-on-any-branch-is-there-an-easy-way-to-get-back-on-a-branch.
-General idea:
-\begin{verbatim}
-git branch <tmp-branch>
-git checkout master
-git merge <tmp-branch>
-git push origin master
 \end{verbatim}
 
 \end{document}
