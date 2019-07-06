@@ -163,6 +163,79 @@ git branch <branch-name>
 git branch -d <branch-name>
 \end{verbatim}
 
+<<<<<<< HEAD
+=======
+Rename an existing branch (https://multiplestates.wordpress.com/2015/02/05/rename-a-local-and-remote-branch-in-git/):
+\begin{enumerate}
+    \item Rename the branch in your local repository:
+    \begin{verbatim}
+git branch -m <old-name> <new-name>
+    \end{verbatim}
+    \item Push the new branch to remote:
+    \begin{verbatim}
+git push origin :<old-name> <new-name>
+    \end{verbatim}
+    \item 
+    \begin{verbatim}
+git push origin -u <new-name>
+    \end{verbatim}
+\end{enumerate}
+
+\subsection{Tags}
+I know these are not exactly branches but they might work the same way. This section might be moved, if it is getting to big.
+
+Make a new tag:
+\begin{emunterate}
+    \item
+    \begin{verbatim}
+git tag <name>
+git tag <name> <short-sha>
+    \end{verbatim}
+    \item
+    \begin{verbatim}
+git push origin <name>
+git push origin --tags
+    \end{verbatim}
+\end{emunterate}
+
+Delete an existing tag:
+\begin{enumerate}
+    \item 
+    \begin{verbatim}
+git tag -d <name>
+    \end{verbatim}
+    \item
+    \begin{verbatim}
+git push origin :refs/tags/<name>
+    \end{verbatim}
+\end{enumerate}
+
+Rename an existing tag (https://stackoverflow.com/questions/1028649/how-do-you-rename-a-git-tag):
+\begin{enumerate}
+    \item 
+    \begin{verbatim}
+git tag <new-name> <old-name>
+    \end{verbatim}
+    \item
+    \begin{verbatim}
+git tag -d <old-name>
+    \end{verbatim}
+    \item
+    \begin{verbatim}
+git push origin :refs/tags/<old-name>
+    \end{verbatim}
+    \item
+    \begin{verbatim}
+git push --tags
+    \end{verbatim}
+\end{enumerate}
+
+Remind all co-workers to run the following command:
+\begin{verbatim}
+git pull --prune --tags
+\end{verbatim}
+
+>>>>>>> 59cc96404dfca9d8591f35d33497adf6ceffe4cf
 \subsection{Recurring bugs}
 
 "Git push master fatal: You are not currently on a branch"
