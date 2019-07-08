@@ -115,7 +115,32 @@ git push --tags origin
     \item Choose the repository you want to import.
 \end{enumerate}
 
-(If you want to migrate a repository from an existing remote to a new remote, checkout the following tutorial: https://gist.github.com/niksumeiko/8972566.)
+If you want to migrate a repository from an existing remote to a new remote, you can use the following commands (based on the following tutorial https://gist.github.com/niksumeiko/8972566):
+Move repository from Cloudforge to Github.
+\begin{enumerate}
+    \item Open a terminal and go to the folder the repository is located in.
+    \item Add a new remote origin:
+    \begin{verbatim}
+git remote add new-origin <path-to-new-repository>
+    \end{verbatim}
+    \item Push all branches and tags to the new repository:
+    \begin{verbatim}
+git push --all new-origin
+git push --tags new-origin
+    \end{verbatim}
+    \item Show existing remotes
+    \begin{verbatim}
+git remote -v
+    \end{verbatim}
+    \item Remove old remote repository:
+    \begin{verbatim}
+git remote rm origin
+    \end{verbatim} 
+    \item Rename new remote repository to origin
+    \begin{verbatim}
+git remote rename new-origin origin
+    \end{verbatim}
+\end{enumerate}
 
 \section{Maintaining the code}
 
