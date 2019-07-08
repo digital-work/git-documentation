@@ -179,16 +179,18 @@ git difftool <sha-1> <sha-2>
 If you have add the changes already you will have to call the following command:
 \begin{verbatim}
 git difftool HEAD
+git difftool --staged
 \end{verbatim}
 
+\subsubsection{FileMerge on Mac}
 If you are doing this for the first time, you might have to set up an appropritate diff tool.
-On Mac, you might want to use FileMerge following these easy steps (https://stackoverflow.com/questions/21486481/is-it-possible-to-view-git-diffs-using-a-gui-side-by-side-tool-on-mac):
+On Mac, you might want to use FileMerge that is already included on most MacOs's following these easy steps (https://stackoverflow.com/questions/21486481/is-it-possible-to-view-git-diffs-using-a-gui-side-by-side-tool-on-mac):
 \begin{enumerate}
 	\item Define FileMerge for the mergetool:
 	\begin{verbatim}
 git config --global merge.tool opendiff
 	\end{verbatim}
-	\item Define FileMerg for the difftool:
+	\item Define FileMerge for the difftool:
 	\begin{verbatim}
 git config --global diff.tool opendiff	
 	\end{verbatim}		
@@ -197,6 +199,29 @@ git config --global diff.tool opendiff
 git config --global diff.tool opendiff
 	\end{verbatim}	
 \end{enumerate}
+
+\subsubsection{TortoiseGit on PC}
+On PC, you might want use Tortoise following these easy steps (https://gist.github.com/ellisda/25cdd92129c5b44406ab):
+\begin{enumerate}
+	\item Download and install TortoiseGit (https://tortoisegit.org/download/).
+	\item Locate the global .gitconfig file in your home folder.
+	\item Add the following lines to the config file:
+	\begin{verbatim}
+[diff]
+	tool = TortoiseGitDiff	
+[difftool]
+	prompt = false
+[difftool "TortoiseGitDiff"]
+	cmd = \"C:/Program Files/TortoiseGit/bin/TortoiseGitMerge.exe\" -mine:"$REMOTE" -base:"$LOCAL" 
+	
+[merge]
+	tool = TortoiseGitMerge	
+[mergetool "TortoiseGitMerge"]
+	cmd = \"C:/Program Files/TortoiseGit/bin/TortoiseGitMerge.exe\" -base:"$BASE" -mine:"$LOCAL" -theirs:"$REMOTE" -merged:"$MERGED"
+	\end{verbatim}
+	You might have to adjust the executable path to match the actual location of the programme.
+\end{enumerate}
+"C:/Program Files/TortoiseGIT/bin/TortoiseGitMerge.exe"
 
 \section{Branches}
 Branches can be helpful when we have a main project, from which we derive minor side projects. A branch can stand by itself or merged again with the main branch ($master$).

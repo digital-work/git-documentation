@@ -14,6 +14,12 @@ Contents
   * Maintaining the code
     * From Overleaf
     * From your PC/Mac
+  * Diffs and conflicts
+    * Tools
+      * FileMerge on Mac
+      * TortoiseGit on PC
   * Branches
     * General commands
     * Recurring bugs
+  * Tags
+    * General commands
