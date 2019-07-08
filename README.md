@@ -18,6 +18,7 @@ Contents
     * Tools
       * FileMerge on Mac
       * TortoiseGit on PC
+    * General approach
   * Branches
     * General commands
     * Recurring bugs

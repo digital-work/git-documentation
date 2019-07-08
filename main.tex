@@ -224,6 +224,36 @@ On PC, you might want use Tortoise following these easy steps (https://gist.gith
     You might have to adjust the executable path to match the actual location of the programme.
 \end{enumerate}
 
+\subsection{General approach}
+You will most likely encounter a merge conflict, after calling git pull from the command line. You will recognize a merge conflict by a message similar to this one:
+\begin{verbatim}
+error: Your local changes to the following files would be 
+       overwritten by merge:
+       main.tex
+Please commit your changes or stash them before you merge. 
+Aborting
+\end{verbatim}
+We can solve it by the following simple steps:
+\begin{enuemrate}
+    \item Save the local changes:
+    \begin{verbatim}
+git pull
+    \end{verbatim}
+    \item  Download the latest changes from the remote repository:
+    \begin{verbatim}
+git pull
+    \end{verbatim}
+    \item Reload changes on the local copy:
+    \begin{verbatim}
+git stash pop
+    \end{verbatim}
+    \item Resolve conflict by calling the mergetool
+    \begin{verbatim}
+git mergetool
+    \end{verbatim}
+    \item Commit and push your changes to the repository.
+\end{enuemrate}
+
 \section{Branches}
 Branches can be helpful when we have a main project, from which we derive minor side projects. A branch can stand by itself or merged again with the main branch ($master$).
 
