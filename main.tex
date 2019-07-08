@@ -212,16 +212,17 @@ On PC, you might want use Tortoise following these easy steps (https://gist.gith
 [difftool]
 	prompt = false
 [difftool "TortoiseGitDiff"]
-	cmd = \"C:/Program Files/TortoiseGit/bin/TortoiseGitMerge.exe\" -mine:"$REMOTE" -base:"$LOCAL" 
+	cmd = \"C:/Program Files/TortoiseGit/bin/TortoiseGitMerge.exe\" 
+	-mine:"$REMOTE" -base:"$LOCAL" 
 	
 [merge]
 	tool = TortoiseGitMerge	
 [mergetool "TortoiseGitMerge"]
-	cmd = \"C:/Program Files/TortoiseGit/bin/TortoiseGitMerge.exe\" -base:"$BASE" -mine:"$LOCAL" -theirs:"$REMOTE" -merged:"$MERGED"
+	cmd = \"C:/Program Files/TortoiseGit/bin/TortoiseGitMerge.exe\" 
+	-base:"$BASE" -mine:"$LOCAL" -theirs:"$REMOTE" -merged:"$MERGED"
 	\end{verbatim}
 	You might have to adjust the executable path to match the actual location of the programme.
 \end{enumerate}
-"C:/Program Files/TortoiseGIT/bin/TortoiseGitMerge.exe"
 
 \section{Branches}
 Branches can be helpful when we have a main project, from which we derive minor side projects. A branch can stand by itself or merged again with the main branch ($master$).
