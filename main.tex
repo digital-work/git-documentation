@@ -138,19 +138,19 @@ cd <path\to\github\repository>
 \begin{enumerate}
     \item Make your changes and save them.
     \item Update your local repository from origin:
-	\begin{verbatim}
+    \begin{verbatim}
 git pull   
     \end{verbatim}
-	\item Stage the file(s) that have changes.
-	\begin{verbatim}
+    \item Stage the file(s) that have changes.
+    \begin{verbatim}
 git add <name-of-file>
     \end{verbatim}
-	\item Commit the changes to the local repository with a change comment:
-	\begin{verbatim}
+    \item Commit the changes to the local repository with a change comment:
+    \begin{verbatim}
 git commit -m "Some useful and readable comment."
     \end{verbatim}
-	\item Push the changes to origin.
-	\begin{verbatim}
+    \item Push the changes to origin.
+    \begin{verbatim}
 git push
     \end{verbatim}
 \end{enumerate}
@@ -186,42 +186,42 @@ git difftool --staged
 If you are doing this for the first time, you might have to set up an appropritate diff tool.
 On Mac, you might want to use FileMerge that is already included on most MacOs's following these easy steps (https://stackoverflow.com/questions/21486481/is-it-possible-to-view-git-diffs-using-a-gui-side-by-side-tool-on-mac):
 \begin{enumerate}
-	\item Define FileMerge for the mergetool:
-	\begin{verbatim}
+    \item Define FileMerge for the mergetool:
+    \begin{verbatim}
 git config --global merge.tool opendiff
-	\end{verbatim}
-	\item Define FileMerge for the difftool:
-	\begin{verbatim}
+    \end{verbatim}
+    \item Define FileMerge for the difftool:
+    \begin{verbatim}
 git config --global diff.tool opendiff	
-	\end{verbatim}		
-	\item Suppress prompt at every comparison:
-	\begin{verbatim}
+    \end{verbatim}		
+    \item Suppress prompt at every comparison:
+    \begin{verbatim}
 git config --global diff.tool opendiff
-	\end{verbatim}	
+    \end{verbatim}	
 \end{enumerate}
 
 \subsubsection{TortoiseGit on PC}
 On PC, you might want use Tortoise following these easy steps (https://gist.github.com/ellisda/25cdd92129c5b44406ab):
 \begin{enumerate}
-	\item Download and install TortoiseGit (https://tortoisegit.org/download/).
-	\item Locate the global .gitconfig file in your home folder.
-	\item Add the following lines to the config file:
-	\begin{verbatim}
+    \item Download and install TortoiseGit (https://tortoisegit.org/download/).
+    \item Locate the global .gitconfig file in your home folder.
+    \item Add the following lines to the config file:
+    \begin{verbatim}
 [diff]
-	tool = TortoiseGitDiff	
+    tool = TortoiseGitDiff	
 [difftool]
-	prompt = false
+    prompt = false
 [difftool "TortoiseGitDiff"]
-	cmd = \"C:/Program Files/TortoiseGit/bin/TortoiseGitMerge.exe\" 
-	-mine:"$REMOTE" -base:"$LOCAL" 
-	
+    cmd = \"C:/Program Files/TortoiseGit/bin/TortoiseGitMerge.exe\"
+    -mine:"$REMOTE" -base:"$LOCAL" 
+
 [merge]
-	tool = TortoiseGitMerge	
+    tool = TortoiseGitMerge	
 [mergetool "TortoiseGitMerge"]
-	cmd = \"C:/Program Files/TortoiseGit/bin/TortoiseGitMerge.exe\" 
-	-base:"$BASE" -mine:"$LOCAL" -theirs:"$REMOTE" -merged:"$MERGED"
-	\end{verbatim}
-	You might have to adjust the executable path to match the actual location of the programme.
+    cmd = \"C:/Program Files/TortoiseGit/bin/TortoiseGitMerge.exe\"
+    -base:"$BASE" -mine:"$LOCAL" -theirs:"$REMOTE" -merged:"$MERGED"
+    \end{verbatim}
+    You might have to adjust the executable path to match the actual location of the programme.
 \end{enumerate}
 
 \section{Branches}
