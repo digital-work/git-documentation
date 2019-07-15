@@ -1,6 +1,8 @@
 \documentclass{article}
 \usepackage[utf8]{inputenc}
 
+\usepackage{hyperref}
+
 \title{Git Documentation}
 \author{Joschua Thomas Simon-Liedtke (oleaf)}
 \date{July 2019}
@@ -115,7 +117,7 @@ git push --tags origin
     \item Choose the repository you want to import.
 \end{enumerate}
 
-If you want to migrate a repository from an existing remote to a new remote, you can use the following commands (based on the following tutorial https://gist.github.com/niksumeiko/8972566):
+If you want to migrate a repository from an existing remote to a new remote, you can use the following commands (based on \href{https://gist.github.com/niksumeiko/8972566}{the following tutorial}):
 Move repository from Cloudforge to Github.
 \begin{enumerate}
     \item Open a terminal and go to the folder the repository is located in.
@@ -209,7 +211,7 @@ git difftool --staged
 
 \subsubsection{FileMerge on Mac}
 If you are doing this for the first time, you might have to set up an appropritate diff tool.
-On Mac, you might want to use FileMerge that is already included on most MacOs's following these easy steps (https://stackoverflow.com/questions/21486481/is-it-possible-to-view-git-diffs-using-a-gui-side-by-side-tool-on-mac):
+On Mac, you might want to use FileMerge that is already included on most MacOs's following \href{https://stackoverflow.com/questions/21486481/is-it-possible-to-view-git-diffs-using-a-gui-side-by-side-tool-on-mac}{these easy steps}:
 \begin{enumerate}
     \item Define FileMerge for the mergetool:
     \begin{verbatim}
@@ -226,9 +228,9 @@ git config --global diff.tool opendiff
 \end{enumerate}
 
 \subsubsection{TortoiseGit on PC}
-On PC, you might want use Tortoise following these easy steps (https://gist.github.com/ellisda/25cdd92129c5b44406ab):
+On PC, you might want use Tortoise following \href{https://gist.github.com/ellisda/25cdd92129c5b44406ab}{these easy steps}:
 \begin{enumerate}
-    \item Download and install TortoiseGit (https://tortoisegit.org/download/).
+    \item Download and install \href{https://tortoisegit.org/download}{TortoiseGit}.
     \item Locate the global .gitconfig file in your home folder.
     \item Add the following lines to the config file:
     \begin{verbatim}
@@ -246,7 +248,7 @@ On PC, you might want use Tortoise following these easy steps (https://gist.gith
     cmd = \"C:/Program Files/TortoiseGit/bin/TortoiseGitMerge.exe\"
     -base:"$BASE" -mine:"$LOCAL" -theirs:"$REMOTE" -merged:"$MERGED"
     \end{verbatim}
-    You might have to adjust the executable path to match the actual location of the programme.
+    You might have to adjust the executable path to match the actual location of the program.
 \end{enumerate}
 
 \subsection{General approach}
@@ -293,7 +295,7 @@ Delete an existing branch:
 git branch -d <branch-name>
 \end{verbatim}
 
-Rename an existing branch (https://multiplestates.wordpress.com/2015/02/05/rename-a-local-and-remote-branch-in-git/):
+Rename \href{https://multiplestates.wordpress.com/2015/02/05/rename-a-local-and-remote-branch-in-git/}{an existing branch}:
 \begin{enumerate}
     \item Rename the branch in your local repository:
     \begin{verbatim}
@@ -312,7 +314,7 @@ git push origin -u <new-name>
 \subsection{Recurring bugs}
 
 "Git push master fatal: You are not currently on a branch"
-Explanation on https://stackoverflow.com/questions/30471557/git-push-master-fatal-you-are-not-currently-on-a-branch/30471627 or https://stackoverflow.com/questions/4735556/git-not-currently-on-any-branch-is-there-an-easy-way-to-get-back-on-a-branch.
+Explanation \href{https://stackoverflow.com/questions/30471557/git-push-master-fatal-you-are-not-currently-on-a-branch/30471627}{here} or \href{https://stackoverflow.com/questions/4735556/git-not-currently-on-any-branch-is-there-an-easy-way-to-get-back-on-a-branch}{here}.
 General idea:
 \begin{verbatim}
 git branch <tmp-branch>
@@ -352,7 +354,7 @@ git push origin :refs/tags/<name>
     \end{verbatim}
 \end{enumerate}
 
-Rename an existing tag (https://stackoverflow.com/questions/1028649/how-do-you-rename-a-git-tag):
+Rename \href{https://stackoverflow.com/questions/1028649/how-do-you-rename-a-git-tag}{an existing tag}:
 \begin{enumerate}
     \item 
     \begin{verbatim}
