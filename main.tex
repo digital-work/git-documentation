@@ -264,7 +264,7 @@ We can solve it by the following simple steps:
 \begin{enumerate}
     \item Save the local changes:
     \begin{verbatim}
-git pull
+git push
     \end{verbatim}
     \item  Download the latest changes from the remote repository:
     \begin{verbatim}
@@ -280,6 +280,11 @@ git mergetool
     \end{verbatim}
     \item Commit and push your changes to the repository.
 \end{enumerate}
+
+If you have some merge conflicts although you did not really have any local changes (e.g. merging wrong branches locally and remotely), you can abort merging with the following command:
+\begin{verbatim}
+git merge --abort
+\end{verbatim}
 
 \section{Branches}
 Branches can be helpful when we have a main project, from which we derive minor side projects. A branch can stand by itself or merged again with the main branch ($master$).
@@ -310,6 +315,11 @@ git push origin :<old-name> <new-name>
 git push origin -u <new-name>
     \end{verbatim}
 \end{enumerate}
+
+The local branch is not tracking the remote branch anymore. When you use gitx or gitk to browse the repository, you will notice that the different branches have a label for the local and the corresponding remote branch. If a branch is not tracking its remote branch anymore, you will only see the local label. In this case, you will have to set the upstream tracking again, using the following command:
+\begin{verbatim}
+git branch --set-upstream-to=origins/pupsi pupsi
+\end{verbatim}
 
 \subsection{Recurring bugs}
 
