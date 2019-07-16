@@ -1,10 +1,19 @@
-\documentclass{article}
+\documentclass{report}
 \usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
 
-\usepackage{hyperref}
+\usepackage{microtype} % Better typography
+
+%\usepackage{libertine} % Using Linux Libertine fonts
+%\usepackage[T1]{fontenc}
+
+%\usepackage[raggedright]{titlesec} % Avoid hyphenation in headers, use also compact to remove white space around headers
+\usepackage{enumitem} % Remove space between items in enumerate
+
+\usepackage{hyperref} % Making links clickable.
 
 \title{Git Documentation}
-\author{Joschua Thomas Simon-Liedtke (oleaf)}
+\author{Joschua Thomas Simon-Liedtke (Ph.D.)}
 \date{July 2019}
 
 \begin{document}
@@ -13,12 +22,12 @@
 
 \tableofcontents
 
-\section{Introduction}
+\chapter{Introduction}
 This document contains some helpful commands that can be used in git.
 
-\section{Setup}
+\chapter{Setup}
 
-\subsection{General settings}
+\section{General settings}
 
 \subsubsection{Changing the user and their options}
 
@@ -42,14 +51,14 @@ Go to Settings\textgreater  Emails and add the email address. Confirm the addres
 \subsubsection{.gitignore}
 In many cases, you will have files in your local repository that you do not want to have committed because they are not useful, they are experimental or too big. In those cases you might want to create a .gitignore file in your folder and commit it to the repository. Git will know automatically that all the fields that are listed in the .gitignore file are not supposed to be tracked for changes.
 
-\subsection{Cross-platform text documents}
+\section{Cross-platform text documents}
 In case you want to version control a text document with GitHub, follow this tutorial.
 
 \subsubsection{Starting in Overleaf}
 Start in Overleaf, then push it to GitHub, and download from GitHub to your computer
 ($Overleaf \rightarrow GitHub \rightarrow PC/Mac$).
 
-\begin{enumerate}
+\begin{enumerate}[noitemsep]
     \item Make a new project in Overleaf.
     \item Choose the GitHub option in the menu and choose "Create a GitHub repository". Choose a name and add a description if wanted.
     \item Choose the GitHub option in the menu and choose "Push Overleaf changes to GitHub".
@@ -66,7 +75,7 @@ git clone <path/to/github/repository> <folder>
 Start on GitHub, then pull it from Overleaf and your PC/Mac
 ($Overleaf \leftarrow GitHub \rightarrow PC/Mac$).
 
-\begin{enumerate}
+\begin{enumerate}[noitemsep]
     \item Make a new repository on GitHub.
     \item Copy the repository address on GitHub.
     \item On your PC/Mac, navigate to the folder where you want to have the repository (or its parent folder).
@@ -91,7 +100,7 @@ git clone <url-to-repository> <path/name/of/folder>
 Start on your PC/Mac, then push to GitHub, and pull it from GitHub from Overleaf
 ($PC/Mac \rightarrow GitHub \rightarrow Overleaf$).
 
-\begin{enumerate}
+\begin{enumerate}[noitemsep]
     \item Create a new project on you PC/Mac:
     \begin{verbatim}
 git init
@@ -119,7 +128,7 @@ git push --tags origin
 
 If you want to migrate a repository from an existing remote to a new remote, you can use the following commands (based on \href{https://gist.github.com/niksumeiko/8972566}{the following tutorial}):
 Move repository from Cloudforge to Github.
-\begin{enumerate}
+\begin{enumerate}[noitemsep]
     \item Open a terminal and go to the folder the repository is located in.
     \item Add a new remote origin:
     \begin{verbatim}
@@ -144,13 +153,13 @@ git remote rename new-origin origin
     \end{verbatim}
 \end{enumerate}
 
-\section{Maintaining the code}
+\chapter{Maintaining the code}
 
 Before committing new code, always make sure to update your local version from origin first!
 
 \subsubsection{From Overleaf}
 
-\begin{enumerate}
+\begin{enumerate}[noitemsep]
     \item Make your changes and save with Ctrl + s / Cmd + s.
     \item Update your Overleaf repository from origin by choosing the GitHub option in the menu and choosing "Pull GitHub changes into Overleaf".
     \item Choose the GitHub option in the menu and choose "Push Overleaf changes to GitHub". Write a comment and commit.
@@ -162,7 +171,7 @@ All commands can be done from the command line after navigating to the folder co
 cd <path\to\github\repository>
 \end{verbatim}
 
-\begin{enumerate}
+\begin{enumerate}[noitemsep]
     \item Make your changes and save them.
     \item Update your local repository from origin:
     \begin{verbatim}
@@ -182,11 +191,11 @@ git push
     \end{verbatim}
 \end{enumerate}
 
-\section{Diffs and conflicts}
+\chapter{Diffs and conflicts}
 In some cases, it is very helpful to see differences between specific commits and/or the current version of the repository.
 Likewise, it is very normal that you will encounter some conflicts while working on a projects with multiple contributors. Don't worry and follow these steps.
 
-\subsection{Tools}
+\section{Tools}
 When comparing two states in git, we can use the default commands to get a patch of the main changes:
 \begin{verbatim}
 git diff
@@ -196,7 +205,7 @@ If you have add the changes already you will have to call the following command:
 \begin{verbatim}
 git diff HEAD
 \end{verbatim}
-This is very helpful, if we want to send a patch to a co-worker.
+This is very helpful, if we want to send a patch to a co-worker, for example.
 
 However, this might be very clunky in some settings because we do not get a smoot visual representation of the changes. Thus, we might use common diff tools to visualize changes like TortoiseGit (Win), FileMerge (Mac) by using the following commands:
 \begin{verbatim}
@@ -212,7 +221,7 @@ git difftool --staged
 \subsubsection{FileMerge on Mac}
 If you are doing this for the first time, you might have to set up an appropritate diff tool.
 On Mac, you might want to use FileMerge that is already included on most MacOs's following \href{https://stackoverflow.com/questions/21486481/is-it-possible-to-view-git-diffs-using-a-gui-side-by-side-tool-on-mac}{these easy steps}:
-\begin{enumerate}
+\begin{enumerate}[noitemsep]
     \item Define FileMerge for the mergetool:
     \begin{verbatim}
 git config --global merge.tool opendiff
@@ -229,7 +238,7 @@ git config --global diff.tool opendiff
 
 \subsubsection{TortoiseGit on PC}
 On PC, you might want use Tortoise following \href{https://gist.github.com/ellisda/25cdd92129c5b44406ab}{these easy steps}:
-\begin{enumerate}
+\begin{enumerate}[noitemsep]
     \item Download and install \href{https://tortoisegit.org/download}{TortoiseGit}.
     \item Locate the global .gitconfig file in your home folder.
     \item Add the following lines to the config file:
@@ -251,7 +260,7 @@ On PC, you might want use Tortoise following \href{https://gist.github.com/ellis
     You might have to adjust the executable path to match the actual location of the program.
 \end{enumerate}
 
-\subsection{General approach}
+\section{General approach}
 You will most likely encounter a merge conflict, after calling git pull from the command line. You will recognize a merge conflict by a message similar to this one:
 \begin{verbatim}
 error: Your local changes to the following files would be 
@@ -261,7 +270,7 @@ Please commit your changes or stash them before you merge.
 Aborting
 \end{verbatim}
 We can solve it by the following simple steps:
-\begin{enumerate}
+\begin{enumerate}[noitemsep]
     \item Save the local changes:
     \begin{verbatim}
 git push
@@ -286,22 +295,23 @@ If you have some merge conflicts although you did not really have any local chan
 git merge --abort
 \end{verbatim}
 
-\section{Branches}
+\chapter{Branches}
 Branches can be helpful when we have a main project, from which we derive minor side projects. A branch can stand by itself or merged again with the main branch ($master$).
 
-\subsection{General commands}
+\section{General commands}
+
 Make new branch:
 \begin{verbatim}
 git branch <branch-name>
 \end{verbatim}
-
+\\
 Delete an existing branch:
 \begin{verbatim}
 git branch -d <branch-name>
 \end{verbatim}
-
+\\
 Rename \href{https://multiplestates.wordpress.com/2015/02/05/rename-a-local-and-remote-branch-in-git/}{an existing branch}:
-\begin{enumerate}
+\begin{enumerate}[noitemsep]
     \item Rename the branch in your local repository:
     \begin{verbatim}
 git branch -m <old-name> <new-name>
@@ -321,7 +331,7 @@ The local branch is not tracking the remote branch anymore. When you use gitx or
 git branch --set-upstream-to=origins/pupsi pupsi
 \end{verbatim}
 
-\subsection{Recurring bugs}
+\section{Recurring bugs}
 
 "Git push master fatal: You are not currently on a branch"
 Explanation \href{https://stackoverflow.com/questions/30471557/git-push-master-fatal-you-are-not-currently-on-a-branch/30471627}{here} or \href{https://stackoverflow.com/questions/4735556/git-not-currently-on-any-branch-is-there-an-easy-way-to-get-back-on-a-branch}{here}.
@@ -333,13 +343,13 @@ git merge <tmp-branch>
 git push origin master
 \end{verbatim}
 
-\section{Tags}
+\chapter{Tags}
 Tags can be added to highlight specific releases. The can represent milestones, versions, etc.
 
-\subsection{General commands}
+\section{General commands}
 
 Make a new tag:
-\begin{enumerate}
+\begin{enumerate}[noitemsep]
     \item
     \begin{verbatim}
 git tag <name>
@@ -351,9 +361,9 @@ git push origin <name>
 git push origin --tags
     \end{verbatim}
 \end{enumerate}
-
+\\
 Delete an existing tag:
-\begin{enumerate}
+\begin{enumerate}[noitemsep]
     \item 
     \begin{verbatim}
 git tag -d <name>
@@ -363,9 +373,9 @@ git tag -d <name>
 git push origin :refs/tags/<name>
     \end{verbatim}
 \end{enumerate}
-
+\\
 Rename \href{https://stackoverflow.com/questions/1028649/how-do-you-rename-a-git-tag}{an existing tag}:
-\begin{enumerate}
+\begin{enumerate}[noitemsep]
     \item 
     \begin{verbatim}
 git tag <new-name> <old-name>
@@ -383,7 +393,7 @@ git push origin :refs/tags/<old-name>
 git push --tags
     \end{verbatim}
 \end{enumerate}
-
+\\
 Remind all co-workers to run the following command:
 \begin{verbatim}
 git pull --prune --tags
