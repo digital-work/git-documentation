@@ -1,7 +1,7 @@
 # git-documentation
-This document contains some helpful commands to navigate git.
+This document contains some helpful commands to navigate git. The base of this document can be found on github at: https://github.com/joschuaos/git-documentation. On the github page you can also find a project, where you can add new entries for this documentation.
 
-Contents
+## Contents
   * Introduction
   * Setup
     * General settings 
@@ -12,8 +12,9 @@ Contents
       * Starting on GitHub
       * Starting on your PC/Mac
   * Maintaining the code
-    * From Overleaf
-    * From your PC/Mac
+    * Cross-platform text documents
+      * From Overleaf
+      * From your PC/Mac
   * Diffs and conflicts
     * Tools
       * FileMerge on Mac
