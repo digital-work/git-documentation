@@ -276,7 +276,7 @@ We can solve it by the following simple steps:
 \begin{enumerate}[noitemsep]
     \item Save the local changes:
     \begin{verbatim}
-git push
+git stash
     \end{verbatim}
     \item  Download the latest changes from the remote repository:
     \begin{verbatim}
@@ -291,6 +291,10 @@ git stash pop
 git mergetool
     \end{verbatim}
     \item Commit and push your changes to the repository.
+    \item Call the following command to get rid of all the intermediary .orig-files:
+    \begin{verbatim}
+git clean -f
+    \end{verbatim}
 \end{enumerate}
 
 If you have some merge conflicts although you did not really have any local changes (e.g. merging wrong branches locally and remotely), you can abort merging with the following command:
