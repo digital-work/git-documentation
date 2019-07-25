@@ -12,6 +12,8 @@
 
 \usepackage{hyperref} % Making links clickable.
 
+\usepackage{graphicx} % using resize boxes
+
 \title{Git Documentation}
 \author{Joschua Thomas Simon-Liedtke (Ph.D.)}
 \date{July 2019}
@@ -43,8 +45,7 @@ got config --global user.name
 \end{verbatim}
 
 On Overleaf:
-Go to Account\textgreater  Account Settings and add the email address. Confirm the address by opening the email that you received in your mailbox.
-\\
+Go to Account{\textgreater}Account Settings and add the email address. Confirm the address by opening the email that you received in your mailbox.
 
 On GitHub:
 Go to Settings\textgreater  Emails and add the email address. Confirm the address by opening the email that you received in your mailbox. Choose a primary email address(, which is the one that is going to show up in your commits). OBS: Make sure that you did not mark the "Keep my email address private"-option. The name (that will actually show up in your commits) can be changed in your GitHub profile.
@@ -194,6 +195,16 @@ git push
     \end{verbatim}
 \end{enumerate}
 
+\section{General commands}
+
+\subsection{Renaming version-controlled files}
+If we want to change the name of a version-controlled document whil still preserving the history of its content, we can use the following command:
+\begin{verbatim}
+git mv old_filename new_filename
+\end{verbatim}
+Then, commit and push the changes as always.
+
+
 \chapter{Diffs and conflicts}
 In some cases, it is very helpful to see differences between specific commits and/or the current version of the repository.
 Likewise, it is very normal that you will encounter some conflicts while working on a projects with multiple contributors. Don't worry and follow these steps.
@@ -242,25 +253,26 @@ git config --global diff.tool opendiff
 \subsection{TortoiseGit on PC}
 On PC, you might want use Tortoise following \href{https://gist.github.com/ellisda/25cdd92129c5b44406ab}{these easy steps}:
 \begin{enumerate}[noitemsep]
-    \item Download and install \href{https://tortoisegit.org/download}{TortoiseGit}.
-    \item Locate the global .gitconfig file in your home folder.
-    \item Add the following lines to the config file:
-    \begin{verbatim}
+  \item Download and install \href{https://tortoisegit.org/download}{TortoiseGit}.
+  \item Locate the global .gitconfig file in your home folder.
+  \item Add the following lines to the config file:
+  \begin{verbatim}
 [diff]
-    tool = TortoiseGitDiff	
+  tool = TortoiseGitDiff	
 [difftool]
-    prompt = false
+  prompt = false
 [difftool "TortoiseGitDiff"]
-    cmd = \"C:/Program Files/TortoiseGit/bin/TortoiseGitMerge.exe\"
-    -mine:"$REMOTE" -base:"$LOCAL" 
+  cmd = \"C:/Program Files/Path/To/TortoiseGitMerge.exe\"
+ -mine:"$REMOTE" -base:"$LOCAL" 
 
 [merge]
-    tool = TortoiseGitMerge	
+  tool = TortoiseGitMerge	
 [mergetool "TortoiseGitMerge"]
-    cmd = \"C:/Program Files/TortoiseGit/bin/TortoiseGitMerge.exe\"
-    -base:"$BASE" -mine:"$LOCAL" -theirs:"$REMOTE" -merged:"$MERGED"
-    \end{verbatim}
-    You might have to adjust the executable path to match the actual location of the program.
+  cmd = \"C:/Program Files/Path/To/TortoiseGitMerge.exe\"
+ -base:"$BASE" -mine:"$LOCAL" -theirs:"$REMOTE" 
+ -merged:"$MERGED"
+  \end{verbatim}
+  You might have to adjust the executable path to match the actual location of the program.
 \end{enumerate}
 
 \section{General approach}
@@ -311,12 +323,12 @@ Make new branch:
 \begin{verbatim}
 git branch <branch-name>
 \end{verbatim}
-\\
+
 Delete an existing branch:
 \begin{verbatim}
 git branch -d <branch-name>
 \end{verbatim}
-\\
+
 Rename \href{https://multiplestates.wordpress.com/2015/02/05/rename-a-local-and-remote-branch-in-git/}{an existing branch}:
 \begin{enumerate}[noitemsep]
     \item Rename the branch in your local repository:
@@ -368,7 +380,7 @@ git push origin <name>
 git push origin --tags
     \end{verbatim}
 \end{enumerate}
-\\
+
 Delete an existing tag:
 \begin{enumerate}[noitemsep]
     \item 
@@ -380,7 +392,7 @@ git tag -d <name>
 git push origin :refs/tags/<name>
     \end{verbatim}
 \end{enumerate}
-\\
+
 Rename \href{https://stackoverflow.com/questions/1028649/how-do-you-rename-a-git-tag}{an existing tag}:
 \begin{enumerate}[noitemsep]
     \item 
@@ -400,7 +412,7 @@ git push origin :refs/tags/<old-name>
 git push --tags
     \end{verbatim}
 \end{enumerate}
-\\
+
 Remind all co-workers to run the following command:
 \begin{verbatim}
 git pull --prune --tags
