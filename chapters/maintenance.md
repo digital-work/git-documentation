@@ -44,3 +44,10 @@ If we want to change the name of a version-controlled document whil still preser
 git mv old_filename new_filename
 \end{verbatim}
 Then, commit and push the changes as always.
+
+\subsection{Moving version-controlled files}
+If we want to move a version-controlled document whil still preserving the history of its content, we can use the following command:
+\begin{verbatim}
+git mv filename dir
+\end{verbatim}
+Then, commit and push the changes as always.
