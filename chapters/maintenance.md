@@ -52,6 +52,12 @@ git mv filename dir
 \end{verbatim}
 Then, commit and push the changes as always.
 
+\subsection{Recover accidentally deleted files}
+We can restore accidentally deleted files as described \href{https://stackoverflow.com/questions/11956710/git-recover-deleted-file-where-no-commit-was-made-after-the-delete}{here}:
+\begin{verbatim}
+git checkout path/to/file-I-want-to-bring-back.sth
+\end{verbatim}
+
 \section{Recurring Bugs}
 
 In some cases, the following error might occur when trying to push/pull (a) commit(s):
