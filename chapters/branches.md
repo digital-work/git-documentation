@@ -28,10 +28,21 @@ git push origin -u <new-name>
     \end{verbatim}
 \end{enumerate}
 
-The local branch is not tracking the remote branch anymore. When you use gitx or gitk to browse the repository, you will notice that the different branches have a label for the local and the corresponding remote branch. If a branch is not tracking its remote branch anymore, you will only see the local label. In this case, you will have to set the upstream tracking again, using the following command:
-\begin{verbatim}
-git branch --set-upstream-to=origins/pupsi pupsi
-\end{verbatim}
+In some cases we want to merge to branches into each other, e.g. branch (b) into (a), as explained \href{https://superuser.com/questions/340471/how-can-i-merge-two-branches-without-losing-any-files}{here}:
+\begin{enumerate}
+  \item Switch to branch (a):
+  \begin{verbatim}
+git checkout a
+  \end{verbatim}
+  \item Merge branch (b) into (a):
+  \begin{verbatim}
+git merge b
+  \end{verbatim}
+  \item Commit your changes:
+  \begin{verbatim}
+git commit -a
+  \end{verbatim}
+\end{enumerate}
 
 \section{Recurring bugs}
 
@@ -43,4 +54,9 @@ git branch <tmp-branch>
 git checkout master
 git merge <tmp-branch>
 git push origin master
+\end{verbatim}
+
+The local branch is not tracking the remote branch anymore. When you use gitx or gitk to browse the repository, you will notice that the different branches have a label for the local and the corresponding remote branch. If a branch is not tracking its remote branch anymore, you will only see the local label. In this case, you will have to set the upstream tracking again, using the following command:
+\begin{verbatim}
+git branch --set-upstream-to=origins/pupsi pupsi
 \end{verbatim}

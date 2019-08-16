@@ -14,6 +14,11 @@ This document contains some helpful commands to navigate git. The base of this d
   * Cross-platform text documents
     * From Overleaf
     * From your PC/Mac
+  * General commands  
+    * Renaming version-controlled files
+    * Moving version-controlled files
+    * Recover accidentally deleted files
+  * Recurring bugs
 * Diffs and conflicts
   * Tools
     * FileMerge on Mac
@@ -21,6 +26,7 @@ This document contains some helpful commands to navigate git. The base of this d
   * General approach
 * Branches
   * General commands
+    * Merging two branches
   * Recurring bugs
 * Tags
   * General commands
