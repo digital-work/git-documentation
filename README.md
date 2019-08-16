@@ -26,7 +26,6 @@ This document contains some helpful commands to navigate git. The base of this d
   * General approach
 * Branches
   * General commands
-    * Merging two branches
   * Recurring bugs
 * Tags
   * General commands
