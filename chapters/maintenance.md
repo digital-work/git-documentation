@@ -51,3 +51,15 @@ If we want to move a version-controlled document whil still preserving the histo
 git mv filename dir
 \end{verbatim}
 Then, commit and push the changes as always.
+
+\section{Recurring Bugs}
+
+In some cases, the following error might occur when trying to push/pull (a) commit(s):
+\begin{verbatim}
+LF will be replaced by CRLF.    
+\end{verbatim}
+A solution is described \href{https://stackoverflow.com/questions/5834014/lf-will-be-replaced-by-crlf-in-git-what-is-that-and-is-it-important}{here}:
+\begin{verbatim}
+git config core.autocrlf true
+\end{verbatim}
+
