@@ -52,6 +52,16 @@ git mv filename dir
 \end{verbatim}
 Then, commit and push the changes as always.
 
+\subsection(Removing files that are too big for the repository)
+
+When adding media files like mp3 the repository might increase in size drastically since on each new upload the current file is stored in the repository. At some point we MIGHT have to remove some of the files, and just calling $git rm <file url>$ might not do the trick because the repository still contains the state of the previously committed and tracked media files. In that case we can follow the instructions described 
+\href{https://freek.dev/879-how-to-remove-a-big-file-wrongly-committed-to-a-git-repo}{here}:
+
+\begin{verbatim}
+git filter-branch --tree-filter 'rm path/to/your/bigfile' HEAD
+git push origin master --force
+\end{verbatim}
+
 \subsection{Recover accidentally deleted files}
 We can restore accidentally deleted files as described \href{https://stackoverflow.com/questions/11956710/git-recover-deleted-file-where-no-commit-was-made-after-the-delete}{here}:
 \begin{verbatim}
