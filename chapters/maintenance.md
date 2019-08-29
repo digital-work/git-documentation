@@ -52,6 +52,22 @@ git mv filename dir
 \end{verbatim}
 Then, commit and push the changes as always.
 
+\subsection{Removing/Deleting files}
+Remove a file from the repository by using:
+\begin{verbatim}
+git rm <file/folder>
+\end{verbatim}
+
+If you want to keep it in the file system, while removing it from the repository, you can use:
+\begin{verbatim}
+git rm --cached <file/folder>
+\end{verbatim}
+
+If you want to delete a file recursively, you can use:
+\begin{verbatim}
+git rm -r <folder>
+\end{verbatim}
+
 \subsection{Recover accidentally deleted files}
 We can restore accidentally deleted files as described \href{https://stackoverflow.com/questions/11956710/git-recover-deleted-file-where-no-commit-was-made-after-the-delete}{here}:
 \begin{verbatim}
