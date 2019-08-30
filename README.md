@@ -29,3 +29,5 @@ This document contains some helpful commands to navigate git. The base of this d
   * Recurring bugs
 * Tags
   * General commands
+
+% comment
