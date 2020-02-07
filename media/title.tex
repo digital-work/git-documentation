@@ -1,0 +1,42 @@
+\newgeometry{left=1.875in,right=1.875in} % use whatever margins you want for left, right, top and bottom.
+
+\begin{titlepage} % Suppresses headers and footers on the title page
+
+	\raggedleft % Right align everything
+	
+	\vspace*{\baselineskip} % Whitespace at the top of the page
+	
+	%------------------------------------------------
+	%	Author
+	%------------------------------------------------
+	
+	{\Large \documenter} \\ [\baselineskip]
+%	{\Large (Sammedrag av \\
+%	\bookSummarizer)} % Author name
+	
+	\vspace*{0.167\textheight} % Whitespace before the title
+	
+	%------------------------------------------------
+	%	Title and subtitle
+	%------------------------------------------------
+	
+%	\textbf{\LARGE Sammedrag av}\\[\baselineskip] % First title line
+	
+	{\textcolor{\docColor}{\Huge \docTitle}}\\[\baselineskip] % Main title line which draws the focus of the reader
+	
+	%{\Large \textit{\bookSubtitle}} % Subtitle
+	
+	\vfill % Whitespace between the titles and the publisher
+	
+	%------------------------------------------------
+	%	Publisher
+	%------------------------------------------------
+	
+	{\large \docLocation, den \today } \\ [\baselineskip]
+	{\large \docPublisher} % Publisher and logo
+	
+	\vspace*{3\baselineskip} % Whitespace at the bottom of the page
+
+\end{titlepage}
+
+\restoregeometry
