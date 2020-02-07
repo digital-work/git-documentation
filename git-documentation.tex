@@ -1,10 +1,18 @@
 \documentclass{report}
 
+% Put author, summarizer and titles here so we know what this document is about.
+\newcommand{\docSummarizer}{Dr. Joschua Thomas\\
+Simon-Liedtke}
+\newcommand{\docTitle}{Git Documentation}
+
 % The Variables %
 \input{media/variables}
 
 % The Packages %
 \input{media/packages}
+
+% The commands %
+\input{media/commands}
 
 \title{Git Documentation}
 \author{Joschua Thomas Simon-Liedtke (Ph.D.)}
@@ -14,11 +22,9 @@
 
 \maketitle
 
-\chapter*{Foreword}
+\chapter*{Meta}
 
-This document contains some helpful commands that can be used in git.
-
-\tableofcontents
+\input{media/meta}
 
 %% Setup %%
 \chapter{Setup}
