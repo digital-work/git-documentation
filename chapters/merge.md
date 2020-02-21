@@ -95,9 +95,10 @@ git stash pop
 git mergetool
     \end{verbatim}
     \item Commit and push your changes to the repository.
-    \item Call the following command to get rid of all the intermediary .orig-files:
+    \item Call the following command to get rid of all the intermediary .orig-files. (If you want to delete folders recursively you can add the -d option):
     \begin{verbatim}
 git clean -f
+git clean -fd
     \end{verbatim}
 \end{enumerate}
 
