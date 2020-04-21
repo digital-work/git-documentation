@@ -17,3 +17,4 @@ Create a symmlink as described \href{https://www.howtogeek.com/297721/how-to-cre
 \begin{verbatim}
 ln -s original link
 \end{verbatim}
+OBS: Use absolute url on Mac!
