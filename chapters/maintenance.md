@@ -68,6 +68,28 @@ If you want to delete a file recursively, you can use:
 git rm -r <folder>
 \end{verbatim}
 
+\subsection{Bash commands on Mac}
+Move multiple files as described \href{https://stackoverflow.com/questions/2212857/how-do-you-move-multiple-files-in-git}{here}:
+\begin{verbatim}
+for FILE in folder/*.ext; do git mv $FILE new-folder/; done    
+\end{verbatim}
+
+Remove prefix from filename as described \href{https://stackoverflow.com/questions/10535985/how-to-remove-filename-prefix-with-a-posix-shell}{here}:
+\begin{verbatim}
+for FILE in folder/*; do git mv "$FILE" "${FILE#prefix}"
+\end{verbatim}
+
+
+\subsection{Bash commands in Windows}
+You can use the following bash commands as described \href{https://stackoverflow.com/questions/138497/iterate-all-files-in-a-directory-using-a-for-loop}{here}:
+\begin{verbatim}
+for /r %i in (*) do echo %i
+\end{verbatim}
+In bash scripts, we have to double the % signs:
+\begin{verbatim}
+for /r %%i in (*) do echo %%i
+\end{verbatim}
+
 \subsection{Removing files that are too big for the repository}
 
 When adding media files like mp3 the repository might increase in size drastically since on each new upload the current file is stored in the repository. At some point we MIGHT have to remove some of the files, and just calling $git rm <file url>$ might not do the trick because the repository still contains the state of the previously committed and tracked media files. In that case we can follow the instructions described 
@@ -82,6 +104,12 @@ git push origin master --force
 We can restore accidentally deleted files as described \href{https://stackoverflow.com/questions/11956710/git-recover-deleted-file-where-no-commit-was-made-after-the-delete}{here}:
 \begin{verbatim}
 git checkout path/to/file-I-want-to-bring-back.sth
+\end{verbatim}
+
+\subsection{Show full history of moved files}
+You can see the complete log as described \href{https://gist.github.com/ajaegers/2a8d8cbf51e49bcb17d5}{here}:
+\begin{verbatim}
+git log --follow file
 \end{verbatim}
 
 \section{Recurring Bugs}
