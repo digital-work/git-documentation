@@ -122,3 +122,39 @@ git remote rm origin
 git remote rename new-origin origin
     \end{verbatim}
 \end{enumerate}
+
+\subsection{Pulling and pushing to two remotes for a project}
+
+\subsubsection{From GitHub to GitLab}
+
+Unfortunately pull mirroring from GitHub to GitLab is not available in the free version of GitLab, so we have to do it manually. This means, we have to have implement a connection layer (the local repository) that is reponsible for updating between GitHub and GitLab. The sources can be found \href{https://moox.io/blog/keep-in-sync-git-repos-on-github-gitlab-bitbucket/}{here} and \href{https://help.github.com/en/github/using-git/getting-changes-from-a-remote-repository}{here}. You can check the correct remotes with 
+\begin{verbatim}
+git remote -v
+\end{verbatim}
+
+\begin{enumerate}[noitemsep]
+  \item On GitLab: Import existing GitHub project to GitLab by going to: New project {\textgreater}  Import project {\textgreater}   GitHub. Click on the Import button next to the desired project.
+  \item On your local computer: Add the GitLab repository as as push remote:
+  \begin{verbatim}
+git remote set-url origin --add https://gitlab.com/joschuaos/yoshis-hjem.git
+  \end{verbatim}
+  \item On your local computer: Add the GitLab repository as a pull remote:
+  \begin{verbatim}
+git remote add origin-gitlab https://gitlab.com/joschuaos/yoshis-hjem.git
+  \end{verbatim}
+  \item Update changes from you local computer: 
+\begin{verbatim}
+git push
+\end{verbatim}
+  \item Update changes fro your main remote, i.e. GitHub, through your local computer:
+\begin{verbatim}
+git pull
+git push
+\end{verbatim}
+  \item Update changes from you secondary remote, i.e. GitLab, through your local computer:
+\begin{verbatim}
+git fetch origin-gitlab
+git merge origin-gitlab/master
+git push
+\end{verbatim}
+\end{enumerate}
