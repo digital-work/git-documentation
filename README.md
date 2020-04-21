@@ -1,5 +1,3 @@
-testdetest
-
 # git-documentation
 This document contains some helpful commands to navigate git. The base of this document can be found on github at: https://github.com/joschuaos/git-documentation. On the github page you can also find a project, where you can add new entries for this documentation.
 
