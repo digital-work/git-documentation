@@ -79,7 +79,6 @@ Remove prefix from filename as described \href{https://stackoverflow.com/questio
 for FILE in folder/*; do git mv "$FILE" "${FILE#prefix}"
 \end{verbatim}
 
-
 \subsection{Bash commands in Windows}
 You can use the following bash commands as described \href{https://stackoverflow.com/questions/138497/iterate-all-files-in-a-directory-using-a-for-loop}{here}:
 \begin{verbatim}
@@ -111,6 +110,57 @@ You can see the complete log as described \href{https://gist.github.com/ajaegers
 \begin{verbatim}
 git log --follow file
 \end{verbatim}
+
+\subsection{Creating new repository from folder of an existing repository}
+We start with this:
+\begin{verbatim}
+XYZ/
+  .git/
+  A/
+  B/
+  C/
+\end{verbatim}
+but want to end up with this:
+\begin{verbatim}
+XYZ/
+  .git/
+  A/
+  B/
+C/
+  .git/
+  C/
+\end{verbatim}
+
+Making new repository from a folder in an existing GIT repository following \href{https://stackoverflow.com/questions/359424/detach-move-subdirectory-into-separate-git-repository/6295550}{The Easy Way}:
+\begin{enumerate}[noitemsep]
+  \item Prepare the old repository:
+  \begin{verbatim}
+pushd <old-repo>
+git subtree split -P <folder> <new-branch>
+popd
+  \end{verbatim}
+  \item Create the new repository:
+  \begin{verbatim}
+mkdir <new-repo>
+pushd <new-repo>
+git init
+git pull <path/to/old-repo> <new-branch>
+  \end{verbatim}
+  \item Link the new repository to Github:
+  \begin{verbatim}
+git remote add origin ...
+git push origin -u master
+  \end{verbatim}
+  \item Cleanup if desired
+  \begin{verbatim}
+popd
+pushd <old-repo>
+git rm -rf <folder>
+git commit
+  \end{verbatim}
+\end{enumerate}
+
+
 
 \section{Recurring Bugs}
 
