@@ -18,3 +18,21 @@ Create a symmlink as described \href{https://www.howtogeek.com/297721/how-to-cre
 ln -s original link
 \end{verbatim}
 OBS: Use absolute url on Mac!
+
+\section{Conditionals}
+
+We can define variables in the preamble and then check if the variable has been set anywhere inside the document:
+
+\begin{verbatim}
+\def\var1{1} % You can set the variable to true (1) or false (0)
+
+\begin{document}
+
+\if\var1
+... % Do something if var1 has been set to 1.
+\else
+... % Do something else if var has been set to 0.
+\fi
+
+\end{document}
+\end{verbatim}
