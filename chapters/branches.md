@@ -46,7 +46,9 @@ git commit -a
 
 \section{Recurring bugs}
 
-"Git push master fatal: You are not currently on a branch"
+\subsection{Not currently on a branch}
+
+\enquote{Git push master fatal: You are not currently on a branch}
 Explanation \href{https://stackoverflow.com/questions/30471557/git-push-master-fatal-you-are-not-currently-on-a-branch/30471627}{here} or \href{https://stackoverflow.com/questions/4735556/git-not-currently-on-any-branch-is-there-an-easy-way-to-get-back-on-a-branch}{here}.
 General idea:
 \begin{verbatim}
@@ -56,7 +58,30 @@ git merge <tmp-branch>
 git push origin master
 \end{verbatim}
 
+\subsection{Not tracking the remote branch}
 The local branch is not tracking the remote branch anymore. When you use gitx or gitk to browse the repository, you will notice that the different branches have a label for the local and the corresponding remote branch. If a branch is not tracking its remote branch anymore, you will only see the local label. In this case, you will have to set the upstream tracking again, using the following command:
 \begin{verbatim}
 git branch --set-upstream-to=origins/pupsi pupsi
 \end{verbatim}
+
+\subsection{Incompability of Overleaf with branches}
+
+In some projects, we might have various versions of the same document throughout different branches. Unfortunately, Overleaf is not able to track different branches in git. 
+
+Thus, I propose to create the constant document as a placeholder file which imports the various versions from separate files. In practice, we can create individual files for the version files on each branch and import them into the placeholder file. This will make it easier to merge each branch with the master. Once we merged all branches with the master, we can link it problem free with the Overleaf document and (un)comment the versions that we do (not) want.
+
+For merging, we follow \href{https://superuser.com/questions/340471/how-can-i-merge-two-branches-without-losing-any-files}{these steps}:
+\begin{enumerate}[noitemsep]
+  \item Switch to master branch:
+  \begin{verbatim}
+git checkout master
+  \end{verbatim}
+  \item Merge all changes from branch b into master:
+  \begin{verbatim}
+git merge b
+  \end{verbatim}
+  \item Commit your changes:
+  \begin{verbatim}
+git commit -a 
+  \end{verbatim}
+\end{enumerate}
