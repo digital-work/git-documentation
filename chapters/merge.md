@@ -106,3 +106,20 @@ If you have some merge conflicts although you did not really have any local chan
 \begin{verbatim}
 git merge --abort
 \end{verbatim}
+
+\section{How to use a pull request on Github}
+
+\begin{enumerate}[noitemsep]
+  \item Update from latest comit on master
+  \begin{verbatim}
+git pull origin master
+  \end{verbatim}
+  \item Make a new branch and push it to Github
+  \begin{verbatim}
+git checkout -b pull-request-demo
+git push origin pull-request-demo
+  \end{verbatim}
+  \item Do some changes and commit them.
+  \item Go to Github {\textgreater} Pull requests {\textgreater} New pull request. Choose the branch you want to merge into master under the compare drop-down menue. Add title and description, and press "Create pull request".
+  \item Merge pull request if you are content with the changes. If it cannot be done automatically, we have to do it locally which requires some more effort.
+\end{enumerate}
