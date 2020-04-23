@@ -160,9 +160,9 @@ git commit
   \end{verbatim}
 \end{enumerate}
 
-
-
 \section{Recurring Bugs}
+
+\subsection{CRLF bug}
 
 In some cases, the following error might occur when trying to push/pull (a) commit(s):
 \begin{verbatim}
@@ -173,3 +173,22 @@ A solution is described \href{https://stackoverflow.com/questions/5834014/lf-wil
 git config core.autocrlf true
 \end{verbatim}
 
+\subsection{Ghost files in untracked files list}
+
+It could happen that the untracked files list shows files that do not really exist on the file system:
+\begin{verbatim}
+git status
+On branch master
+Your branch is up to date with 'origin/master'.
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+
+        file1.jpg
+        file2.jpg
+\end{verbatim}
+
+This can be solved by \href{https://stackoverflow.com/questions/11525358/git-untracked-files-list-is-wrong}{this solution}:
+\begin{verbatim}
+git clean -f
+\end{verbatim}
