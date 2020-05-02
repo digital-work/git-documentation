@@ -68,6 +68,15 @@ If you want to delete a file recursively, you can use:
 git rm -r <folder>
 \end{verbatim}
 
+If you want to see what would be deleted use:
+\begin{verbatim}
+-n
+--dry-run 
+Don’t actually remove any file(s). 
+Instead, just show if they exist in the index 
+and would otherwise be removed by the command.
+\end{verbatim}
+
 \subsection{Bash commands on Mac}
 Move multiple files as described \href{https://stackoverflow.com/questions/2212857/how-do-you-move-multiple-files-in-git}{here}:
 \begin{verbatim}
@@ -97,6 +106,16 @@ When adding media files like mp3 the repository might increase in size drastical
 \begin{verbatim}
 git filter-branch --tree-filter 'rm path/to/your/bigfile' HEAD
 git push origin master --force
+\end{verbatim}
+
+If you encounter the following error
+\begin{verbatim}
+A previous backup already exists in refs/original/
+\end{verbatim}
+
+You might have to call the command with the -f option as described \href{https://stackoverflow.com/questions/6403601/purging-file-from-git-repo-failed-unable-to-create-new-backup}{here}:
+\begin{verbatim}
+git filter-branch -f --tree-filter 'rm -rf path/to/your/bigfile' HEAD
 \end{verbatim}
 
 \subsection{Recover accidentally deleted files}
@@ -136,7 +155,7 @@ Making new repository from a folder in an existing GIT repository following \hre
   \item Prepare the old repository:
   \begin{verbatim}
 pushd <old-repo>
-git subtree split -P <folder> <new-branch>
+git subtree split -P <folder> -b <new-branch>
 popd
   \end{verbatim}
   \item Create the new repository:
