@@ -35,4 +35,8 @@
        {\@latex@warning{Empty `thebibliography' environment}}%
       \endlist}
 
+\let \@sverbatim \@verbatim
+\def \@verbatim {\@sverbatim \verbatimplus}
+{\catcode`'=13 \gdef \verbatimplus{\catcode`'=13 \chardef '=13 }} 
+
 \makeatother
