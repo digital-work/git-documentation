@@ -1,6 +1,18 @@
 # git-documentation
 This document contains some helpful commands to navigate git. The base of this document can be found on github at: https://github.com/joschuaos/git-documentation. On the github page you can also find a project, where you can add new entries for this documentation.
 
+`.`  
+`├── chapters: …  `  
+`├── code:  `  
+`│       ├── adfad `  
+`├── README.md`  
+```
+├── code:  [link](somewhere.md)
+│    ├──  
+├── README.md
+```
+[`this is code`](https://this_is_url/)
+
 ## Contents
 * Setup
   * General settings 
