@@ -12,6 +12,9 @@ This folder contains git scripts writen in Python that will help you to execute 
  
 ### Usage 
  
+ Use this from the folder where your .git folder is located.
+ `add-remote.py` can be located in a parent folder.
+ 
  ```
  py add-remote.py [-h] [-g GROUP] [-p PROTOCOL] repo
  ```
