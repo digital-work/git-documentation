@@ -4,16 +4,19 @@
 
 This folder contains git scripts writen in Python that will help you to execute common git tasks:
 * [add-remote.py](#add-remote-py)
-
+* [git-cmds.py](#git-cmds.py
+)
 ## add-remote.py
 
- A command line script to add remote origin to GitHub and GitLab. 
- The script will first remove existing remote addresses, before it will add two remote called origin (pointing to GitHub), and origin-gitlab (pointing to GitLab).
+[Up](#helpful-git-scripts)
+
+A command line script to add remote origin to GitHub and GitLab. 
+The script will first remove existing remote addresses, before it will add two remote called origin (pointing to GitHub), and origin-gitlab (pointing to GitLab).
  
 ### Usage 
- 
- Use this from the folder where your .git folder is located.
- `add-remote.py` can be located in a parent folder.
+  
+Use this from the folder where your .git folder is located.
+`add-remote.py` can be located in a parent folder.
  
  ```
  py add-remote.py [-h] [-g GROUP] [-p PROTOCOL] repo
@@ -29,3 +32,21 @@ This folder contains git scripts writen in Python that will help you to execute 
  protocol of the remote address. 
  Can be either HTTPS or SSH. 
  
+ ## git-cmds.py
+ 
+ [Up](#helpful-git-scripts)
+ 
+ A command line script to check status, fetch, pull and push git repositories.
+ 
+ ### Usage
+ 
+Use this from the folder where your .git folder is located.
+`git-cmds.py` can be located in a parent folder.
+
+```
+py git-cmds.py [-h] action
+```
+
+ __Input__:  
+* `action`: git command you want to use.
+Options are status, pull, fetch, and push.
