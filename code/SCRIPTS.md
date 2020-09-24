@@ -18,25 +18,25 @@ The script will first remove existing remote addresses, before it will add two r
 Use this from the folder where your .git folder is located.
 `add-remote.py` can be located in a parent folder.
  
- ```
- py add-remote.py [-h] [-g GROUP] [-p PROTOCOL] repo
- ```
+```
+py add-remote.py [-h] [-g GROUP] [-p PROTOCOL] repo
+```
  
- __Input__:  
+__Input__:  
  
 * `repo`: name of the repository. OBS :warning: : Make sure that the name is the same on GitHub and GitLab.
 * `GROUP`: 
  name of the group on GitLab / organization on GitHub. 
- :warning: OBS :warning: : Make sure that the group and organization name is the same on GitHub and GitLab.
- * `PROTOCOL`:
- protocol of the remote address. 
- Can be either HTTPS or SSH. 
+:warning: OBS :warning: : Make sure that the group and organization name is the same on GitHub and GitLab.
+* `PROTOCOL`:
+protocol of the remote address. 
+Can be either HTTPS or SSH. 
  
- ## git-cmds.py
+## git-cmds.py
  
- [Up](#helpful-git-scripts)
+[Up](#helpful-git-scripts)
  
- A command line script to check status, fetch, pull and push git repositories.
+A command line script to check status, fetch, pull and push git repositories.
  
  ### Usage
  
