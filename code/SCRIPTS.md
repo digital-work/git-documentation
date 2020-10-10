@@ -38,7 +38,10 @@ Can be either HTTPS or SSH.
  
 A command line script to check status, fetch, pull and push git repositories.
  
- ### Usage
+### Usage
+ 
+You need to create a file called data.json in the same folder containing the folder structure of the repositories.
+The file structure is represented in a dictionary: The key is the folder name, the value is a list containing the name(s) of the repository(ies).
  
 Use this from the folder where your .git folder is located.
 `git-cmds.py` can be located in a parent folder.

@@ -1,0 +1,9 @@
+# This is an example file that is used in git-cmds.py.
+# The file structure is represented in a dictionary:
+# The key is the folder name, the list contains the name(s) of the repository(ies).
+
+{
+   "digital-work" :
+   [ "git-documentation",
+    ],
+}
