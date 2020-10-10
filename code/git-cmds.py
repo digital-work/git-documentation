@@ -7,46 +7,13 @@
 import argparse
 import os
 import re
+import json
 
 def printGroup(group):
   print()
   print("************")
   print("***",group,"***")
   print("************")
-
-groups = {
-  "book-reports" :
-  [ "boligkjoperboka",
-   "hersketeknikker",
-   "klok-paa-folelser",
-   "mindfulness-medfolelse",
-   "operasjon-sjolvdisiplin",
-   "publications",
-   "velvet-rage"
-   ],
-   "digital-work" :
-   [ "digital-basics",
-    "git-documentation"
-    ],
-   "kropp-sinn-sjel" :
-   [ "ae-vil-bare-dans",
-    "flora",
-    "helse-trening",
-    "meditasjon",
-    "sovnheftet",
-    "spraak-som-verktoy"
-    ],
-   "selles-und-jenes" :
-   [ "rupaul-quotes",
-    "stoff"
-    ],
-   "yoshis-liv" :
-   [ "covid-19",
-    "norsk-tysk-statsborgerskap",
-    "yoshis-hjem",
-    "yoshis-sjel",
-    "yoshis-worth"]
-}
 
 class Action(object):
   
@@ -63,6 +30,13 @@ class Action(object):
     return value
 
 def cmds():
+  
+  try: 
+    with open('data.json','r') as filehandler:
+      groups = json.load(filehandler)
+  except:
+    raise Exception('FileError. There is no repo data file. Please create a file called "data.json" with the relevant repositories.')
+
   # position arguments
   parser = argparse.ArgumentParser("A command line script to check status, fetch, pull and push git repositories")
   parser.add_argument("action", help="Action for the git request.", type=Action())
@@ -99,7 +73,6 @@ def cmds():
     
   # Ending here
   print("Ending in: ",os.getcwd())
-
 
 if __name__=='__main__':
   cmds()
