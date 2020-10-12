@@ -67,7 +67,8 @@ def cmds():
       elif args.action=="push":
         print("\n* Pushing repository: ",repo)
         os.system("git push --all")
-      os.chdir("..")
+      if not repo==".":
+        os.chdir("..")
       
     os.chdir("..")
     

@@ -4,6 +4,6 @@
 
 {
    "digital-work" :
-   [ "git-documentation",
-    ],
+   [ "git-documentation"
+    ]
 }
