@@ -118,6 +118,12 @@ You might have to call the command with the -f option as described \href{https:/
 git filter-branch -f --tree-filter 'rm -rf path/to/your/bigfile' HEAD
 \end{verbatim}
 
+You can also use the previous command on multiple files with a BASH script:
+\begin{verbatim}
+for FILE in folder/.jpg; do git filter-branch -f --tree-filter "rm -rf $FILE" HEAD ; done 
+git push --force
+\end{verbatim}
+
 \subsection{Recover accidentally deleted files}
 We can restore accidentally deleted files as described \href{https://stackoverflow.com/questions/11956710/git-recover-deleted-file-where-no-commit-was-made-after-the-delete}{here}:
 \begin{verbatim}
