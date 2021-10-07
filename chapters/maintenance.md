@@ -211,3 +211,11 @@ This can be solved by \href{https://stackoverflow.com/questions/11525358/git-unt
 \begin{verbatim}
 git clean -f
 \end{verbatim}
+
+\subsection{Gitlab protected branch bug}
+
+\begin{verbatim}
+GitLab: You are not allowed to force push code to a protected branch on this project.
+\end{verbatim}
+
+Go to: Settings ${\rightarrow}$ Repository ${\rightarrow}$ Protected Branches, and remove protection from the branch that triggered the bug.
