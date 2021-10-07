@@ -66,6 +66,11 @@ git clone <url-to-repository> <path/name/of/folder>
     \item Choose the repository you want to import.
 \end{enumerate}
 
+If the repository is part of a group in GitHub, you will have to grant access from Overleaf to this group in GitHub first.
+In GitHub, go to Personal Settings ${\rightarrow}$ Applications ${\rightarrow}$ Authorized OAuth Apps ${\rightarrow}$ Overleaf GitHub Sync.
+Select the organization you want to grant access to. 
+You can always revoke access here later.
+
 \subsection{Starting on your PC/Mac}
 Start on your PC/Mac, then push to GitHub, and pull it from GitHub from Overleaf
 ($PC/Mac \rightarrow GitHub \rightarrow Overleaf$).
