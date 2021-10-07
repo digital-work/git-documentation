@@ -179,6 +179,18 @@ git commit
   \end{verbatim}
 \end{enumerate}
 
+\subsection{List all (deleted) files}
+
+All files can be listed with:
+\begin{verbatim}
+git ls-files
+\end{verbatim}
+
+All deleted files can be listed with:
+\begin{verbatim}
+git log --diff-filter=D --summary | grep delete
+\end{verbatim}
+
 \section{Recurring Bugs}
 
 \subsection{CRLF bug}
