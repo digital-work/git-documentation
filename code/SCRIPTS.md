@@ -47,7 +47,7 @@ Use this from the folder where your .git folder is located.
 `git-cmds.py` can be located in a parent folder.
 
 ```
-py git-cmds.py [-h] action
+python3 git-cmds.py [-h] action
 ```
 
  __Input__:  
