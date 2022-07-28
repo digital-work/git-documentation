@@ -55,10 +55,10 @@ def include_images():
       
      title = file.replace('.jpg','').replace('.png','')
      if has_thumbs:
-       rel_thumb = file.replace('.jpg','_thumb.jpg').replace('.png','_thumb.png')
-       md_string = "[![{}]({})]({})".format(title,rel_thumb,rel_file)
+       rel_thumb = rel_file.replace('.jpg','_thumb.jpg').replace('.png','_thumb.png')
+       md_string = "[![{}]({})]({})\n".format(title,rel_thumb,rel_file)
      else:
-       md_string = "![{}]({})".format(title,rel_file)
+       md_string = "![{}]({})\n".format(title,rel_file)
       
      image_strings_file.write(md_string)
  
