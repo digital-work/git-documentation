@@ -42,7 +42,7 @@ def include_images():
  # Iterate directory
  for file in os.listdir(source_dir):
    # check only text files
-   if (file.endswith('.jpg') or file.endswith('.png')) and file.find("_thumb") == -1:
+   if (file.endswith('.jpg') or file.endswith('.png') or file.endswith('.gif')) and file.find("_thumb") == -1:
      res.append(file)
  
  with open(image_strings_dir, 'a') as image_strings_file:
