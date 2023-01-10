@@ -118,6 +118,12 @@ You might have to call the command with the -f option as described \href{https:/
 git filter-branch -f --tree-filter 'rm -rf path/to/your/bigfile' HEAD
 \end{verbatim}
 
+You can also use the previous command on multiple files with a BASH script:
+\begin{verbatim}
+for FILE in folder/.jpg; do git filter-branch -f --tree-filter "rm -rf $FILE" HEAD ; done 
+git push --force
+\end{verbatim}
+
 \subsection{Recover accidentally deleted files}
 We can restore accidentally deleted files as described \href{https://stackoverflow.com/questions/11956710/git-recover-deleted-file-where-no-commit-was-made-after-the-delete}{here}:
 \begin{verbatim}
@@ -179,6 +185,18 @@ git commit
   \end{verbatim}
 \end{enumerate}
 
+\subsection{List all (deleted) files}
+
+All files can be listed with:
+\begin{verbatim}
+git ls-files
+\end{verbatim}
+
+All deleted files can be listed with:
+\begin{verbatim}
+git log --diff-filter=D --summary | grep delete
+\end{verbatim}
+
 \section{Recurring Bugs}
 
 \subsection{CRLF bug}
@@ -211,3 +229,11 @@ This can be solved by \href{https://stackoverflow.com/questions/11525358/git-unt
 \begin{verbatim}
 git clean -f
 \end{verbatim}
+
+\subsection{Gitlab protected branch bug}
+
+\begin{verbatim}
+GitLab: You are not allowed to force push code to a protected branch on this project.
+\end{verbatim}
+
+Go to: Settings ${\rightarrow}$ Repository ${\rightarrow}$ Protected Branches, and remove protection from the branch that triggered the bug.
