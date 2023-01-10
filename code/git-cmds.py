@@ -64,6 +64,7 @@ def cmds():
   for group, repos in groups.items():
     #print("Now, we are in: ",os.getcwd())
     os.chdir(group)
+    levels = group.count('/')
     printGroup(group)
     # Looping through repositories
     
@@ -91,7 +92,9 @@ def cmds():
           os.system("git status -uno")
        if not repo==".":
           os.chdir("..")
-    os.chdir("..")
+    while levels >= 0:
+       os.chdir("..")
+       levels = levels-1
     
   # Ending here
   print()
