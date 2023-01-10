@@ -15,7 +15,7 @@ def finding_tags():
     1. step: Find all the .md-files in the directory
     '''
     rootdir = "."
-    regex   = re.compile(r'(UKE.*\.md$)')
+    regex   = re.compile(r'(UKE-\d{2}\.md$)')
     
     md_files = []
     
@@ -39,17 +39,28 @@ def finding_tags():
     
     for md in md_files:
         with open(md) as f:
+            week_num     = 0
+            week         = {}
+            week['file'] = md
+            days         = [] 
             for line in f:
-                regex = re.compile(r"^\#.+?(?=Uke).*\d+$", re.IGNORECASE)
+                regex_week = re.compile(r"^\#.+?(?=Uke).*\d+$", re.IGNORECASE)
                 #if a = regex.search(line):
                 #   print(line)
-                if regex.search(line):
+                if not week_num and regex_week.search(line):
                    res = re.findall(r'\d+',line)
                    if res:
-                       week      = {}
-                       week['file'] = md 
-                       week['days'] = []
+                       week_num = int(res[0])
+                        
                        weeks[int(res[0])] = week
+                       
+                regex_days = re.compile(r"^\#\#.+\d{4}\-\d{2}-\d{2}$", re.IGNORECASE)
+                if regex_days.match(line):
+                    res = re.findall(r'\d{4}\-\d{2}-\d{2}',line)
+                    if res:
+                       days.append(res[0])
+            week['days']    = days
+            weeks[week_num] = week
                        
     print(weeks)
 
