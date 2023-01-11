@@ -17,26 +17,35 @@ import json
 
 def organize_repo():
     
-    parser = argparse.ArgumentParser("A command line script to organize a git repository containing images organized by year, month, and day.")
+   parser = argparse.ArgumentParser("A command line script to organize a git repository containing images organized by year, month, and day.")
  
-    parser.add_argument("-p", "--path", help="Path to the target git repository. Default: Current folder.", default='.')
+   parser.add_argument("-p", "--path", help="Path to the target git repository. Default: Current folder.", default='.')
 
-    #parser.add_argument('-s', '--source_dir', help="Path to the source folder, in which the images are located. Default: Current folder.", default=".")
-    #parser.add_argument('-th', '--has_thumbs', help="Indicates if the image(s) has/have thumbnails. Default: False", action='store_true')
+   #parser.add_argument('-s', '--source_dir', help="Path to the source folder, in which the images are located. Default: Current folder.", default=".")
+   #parser.add_argument('-th', '--has_thumbs', help="Indicates if the image(s) has/have thumbnails. Default: False", action='store_true')
   
-    args = parser.parse_args()
+   args = parser.parse_args()
  
-    target_path = args.path
-    try: 
+   target_path = args.path
+   try: 
        if not os.path.exists(target_path):
           raise Exception("PathError. Chosen target path does not exist: {}".format(target_path))
        if call(["git", "branch"], cwd=target_path, stderr=STDOUT, stdout=open(os.devnull, 'w')) != 0:
           raise Exception("TypeError. Chosen directory is not a git repository: {}".format(target_path))
        else:
            print("Repo git check passed: {}.".format(target_path))
-    except Exception as e:
+   except Exception as e:
        print("An error occured: {}.".format(e))    
        return
+   
+   '''
+   Check if JSON representation already exists.
+   '''
+   if os.path.exists(os.path.join(target_path,'DUMP.JSON')):
+       print('The DUMP.JSON file already exists.')
+   create_JSON_representation(target_path)
+
+def create_JSON_representation(target_path):
     
     '''
     1. step: Find all the .md-files in the directory
@@ -177,8 +186,7 @@ def organize_repo():
     '''
     
     json_file = os.path.join(rootdir,'DUMP.JSON')
-    obj = json.dumps(years, indent=3)
-    print(obj)        
+    obj = json.dumps(years, indent=3) 
     
     with open(json_file,"w") as outfile:
        json.dump(years,outfile)
