@@ -78,6 +78,7 @@ def organize_repo():
             week['file'] = os.path.relpath(md[1],rootdir)
             days         = [] 
             for line in f:
+                line = line.strip()
                 '''
                 Finding week number.
                 '''
