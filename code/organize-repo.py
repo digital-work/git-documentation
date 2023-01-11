@@ -41,6 +41,8 @@ def organize_repo():
    '''
    Check if JSON representation already exists.
    '''
+  
+   
    json_file = os.path.join(target_path,'DUMP.JSON')
    if os.path.exists(json_file):
       print('The DUMP.JSON file already exists. Reading data from file.')
@@ -48,10 +50,33 @@ def organize_repo():
       f        = open(json_file,'r')
       json_obj = json.loads(f.read())
       
-      for key in json_obj:
-          print(key)
+      '''
+      Creating glossary file.
+      '''
+       
+      glossar_file = os.path.join(target_path,'GLOSSAR.md')
+      git_string = ""
       
-      #print(json_obj)
+      if 'tags' in json_obj:
+         for tag in json_obj['tags']:
+             git_string += "* {}\n".format(tag)
+             day_string = ""
+             for year in json_obj['tags'][tag]['years']:
+                for week in json_obj['tags'][tag]['years'][year]['weeks']:
+                    for day in json_obj['tags'][tag]['years'][year]['weeks'][week]['days']:
+                       '''
+                       Get rel path to .md file.
+                       '''
+                       md_file = json_obj['years'][year]['weeks'][week]['file'] 
+                       
+                       day_string += "[{}]({}) ".format(day,md_file)
+             day_string = day_string.strip().replace(" ", ", ")
+             git_string += "    * {}\n".format(day_string)
+      glossar_string = "# Glossar\n\nThis glossary has been computed automatically.\n\n## Overview\n\n{}".format(git_string)
+      g = open(glossar_file,"w")
+      g.write(glossar_string)
+      g.close()
+      
    else: 
       print("Creating new DUMP.JSON file.")
       create_JSON_representation(target_path)
