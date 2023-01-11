@@ -64,14 +64,14 @@ def organize_repo():
     }
     '''
     
-    years = {}
+    years = {'years': {}}
     
     for md in md_files:
         with open(md[1],encoding="latin-1") as f:
             year         = md[0]
             #print(year)
-            if not year in years:
-                years[year] = {}
+            if not year in years['years']:
+                years['years'][year] = {"weeks": {}}
             
             week_num     = 0
             week         = {}
@@ -81,7 +81,7 @@ def organize_repo():
                 '''
                 Finding week number.
                 '''
-                regex_week = re.compile(r"^\#.+?(?=Uke)\D*(\d+)$", re.IGNORECASE)
+                regex_week = re.compile(r"^\#.+?(?=Uke)\D*(\d+).*", re.IGNORECASE)
                 res = re.findall(regex_week,line)
                 if not week_num and res:
                    week_num = int(res[0])
@@ -95,14 +95,14 @@ def organize_repo():
                     days.append(res[0])
             week['days']    = days
             
-            years[year][week_num] = week
+            years['years'][year]['weeks'][week_num] = week
     print(years)
 
     '''
     3. Dumping into JSON file
     '''
     
-    json_file = os.path.join(rootdir,'data.json')
+    json_file = os.path.join(rootdir,'DATA.JSON')
     obj = json.dumps(years, indent=3)
     print(obj)        
     
