@@ -103,7 +103,7 @@ def organize_repo():
     3. Dumping into JSON file
     '''
     
-    json_file = os.path.join(rootdir,'DATA.JSON')
+    json_file = os.path.join(rootdir,'DUMP.JSON')
     obj = json.dumps(years, indent=3)
     print(obj)        
     
