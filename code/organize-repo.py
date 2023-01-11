@@ -1,7 +1,7 @@
 '''
   Created on 10. jan 2023.
   
-  Last updated on 10. jan. 2023.
+  Last updated on 11. jan. 2023.
   
   @author. joschua
 '''
@@ -47,7 +47,9 @@ def organize_repo():
     for root, dirs, files in os.walk(rootdir):
         for file in files:
             if regex.match(file):
-                md_files.append(os.path.join(root,file))
+                reldir = os.path.relpath(root,rootdir)
+                year   = re.findall(r'\d{4}',reldir,0)
+                md_files.append([year[0],os.path.join(root,file)])
                 
     '''
     2. Make a representation of the timeline of all files and their contents
@@ -60,34 +62,39 @@ def organize_repo():
     }
     '''
     
-    weeks = {}
+    years = {}
     
     for md in md_files:
-        with open(md,encoding="latin-1") as f:
+        with open(md[1],encoding="latin-1") as f:
+            year         = md[0]
+            #print(year)
+            if not year in years:
+                years[year] = {}
+            
             week_num     = 0
             week         = {}
-            week['file'] = os.path.relpath(md,rootdir)
+            week['file'] = os.path.relpath(md[1],rootdir)
             days         = [] 
             for line in f:
-                regex_week = re.compile(r"^\#.+?(?=Uke).*\d+$", re.IGNORECASE)
-                #if a = regex.search(line):
-                #   print(line)
-                if not week_num and regex_week.search(line):
-                   res = re.findall(r'\d+',line)
-                   if res:
-                       week_num = int(res[0])
-                        
-                       weeks[int(res[0])] = week
-                       
-                regex_days = re.compile(r"^\#\#.+\d{4}\-\d{2}-\d{2}$", re.IGNORECASE)
-                if regex_days.match(line):
-                    res = re.findall(r'\d{4}\-\d{2}-\d{2}',line)
-                    if res:
-                       days.append(res[0])
+                '''
+                Finding week number.
+                '''
+                regex_week = re.compile(r"^\#.+?(?=Uke)\D*(\d+)$", re.IGNORECASE)
+                res = re.findall(regex_week,line)
+                if not week_num and res:
+                   week_num = int(res[0])
+                
+                '''
+                Finding all days listed in file.
+                '''       
+                regex_days = re.compile(r"^\#\#.+(\d{4}\-\d{2}-\d{2})$", re.IGNORECASE)
+                res = re.findall(regex_days, line)
+                if res:
+                    days.append(res[0])
             week['days']    = days
-            weeks[week_num] = week
-                       
-    print(weeks)
+            
+            years[year][week_num] = week
+    print(years)
 
 if __name__=='__main__':
   organize_repo()
