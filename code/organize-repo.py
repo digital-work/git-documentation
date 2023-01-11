@@ -41,9 +41,20 @@ def organize_repo():
    '''
    Check if JSON representation already exists.
    '''
-   if os.path.exists(os.path.join(target_path,'DUMP.JSON')):
-       print('The DUMP.JSON file already exists.')
-   create_JSON_representation(target_path)
+   json_file = os.path.join(target_path,'DUMP.JSON')
+   if os.path.exists(json_file):
+      print('The DUMP.JSON file already exists. Reading data from file.')
+      
+      f        = open(json_file,'r')
+      json_obj = json.loads(f.read())
+      
+      for key in json_obj:
+          print(key)
+      
+      #print(json_obj)
+   else: 
+      print("Creating new DUMP.JSON file.")
+      create_JSON_representation(target_path)
 
 def create_JSON_representation(target_path):
     
@@ -186,10 +197,10 @@ def create_JSON_representation(target_path):
     '''
     
     json_file = os.path.join(rootdir,'DUMP.JSON')
-    obj = json.dumps(years, indent=3) 
+    json_obj = json.dumps(years, indent=3) 
     
     with open(json_file,"w") as outfile:
-       json.dump(years,outfile)
+       json_obj.dump(years,outfile)
     
     print('Ending script')
 
