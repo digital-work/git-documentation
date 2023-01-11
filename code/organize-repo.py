@@ -225,7 +225,7 @@ def create_JSON_representation(target_path):
     json_obj = json.dumps(years, indent=3) 
     
     with open(json_file,"w") as outfile:
-       json_obj.dump(years,outfile)
+       json.dump(years,outfile,indent=3)
     
     print('Ending script')
 
