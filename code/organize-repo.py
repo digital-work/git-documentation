@@ -12,6 +12,8 @@ import os
 from subprocess import call, STDOUT
 import re
 
+import json
+
 
 def organize_repo():
     
@@ -95,6 +97,19 @@ def organize_repo():
             
             years[year][week_num] = week
     print(years)
+
+    '''
+    3. Dumping into JSON file
+    '''
+    
+    json_file = os.path.join(rootdir,'data.json')
+    obj = json.dumps(years, indent=3)
+    print(obj)        
+    
+    with open(json_file,"w") as outfile:
+       json.dump(years,outfile)
+    
+    print('Ending')
 
 if __name__=='__main__':
   organize_repo()
