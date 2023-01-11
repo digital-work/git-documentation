@@ -68,16 +68,87 @@ def organize_repo():
     
     for md in md_files:
         with open(md[1],encoding="utf-8") as f:
-            year         = md[0]
-            #print(year)
-            if not year in years['years']:
-                years['years'][year] = {"weeks": {}}
+            
+            a = f.read()
+            b = f.read()
+            #print(a)
+            
             
             week_num     = 0
             week         = {}
             week['file'] = os.path.relpath(md[1],rootdir)
             days         = [] 
-            tags         = set({})
+            tags_week    = set({})
+            
+            '''
+            setting the year
+            '''
+            year         = md[0]
+            if not year in years['years']:
+               years['years'][year] = {"weeks": {}}
+            
+            '''
+            Finding week number.
+            '''
+            week_num = 0
+            if not week_num:
+               regex_week = re.compile(r"^\#.+?(?=Uke)\D*(\d+).*", re.IGNORECASE)
+               res = re.findall(regex_week,a)
+               if res:
+                  week_num = int(res[0])
+            print("Week: ",week_num)
+            
+            regex_days = re.compile(r"^#{2}\s+(\d{4}-\d{2}-\d{2})$", re.IGNORECASE and re.MULTILINE)
+            days = re.findall(regex_days, a)
+            if days:
+               print("Days: ", days)
+            
+            #results = re.findall(r'^(\w+\n\d+(?:\.\d+){2}\s+<.*>)([\s\S]*?)(?=[\n\r]+\w+\n\d+(?:\.\d+){2}\s<|\Z)', re.M)
+            
+            regex_pars = re.compile(r"(?:#{2}\s+\d{4}-\d{2}-\d{2})([\s\S]*?)(?=#{2}\s+\d{4}-\d{2}-\d{2}|\Z)", re.MULTILINE)
+            #test = '(?:#?\s+\d{4}-\d{2}-\d{2}\n)(.*[^(?:#{2})])'
+            res_pars = re.findall(regex_pars,a)
+            #print(res_pars)
+            if res_pars:
+               i = 0;
+               for par in res_pars:
+                  # New day
+                  tags_day = set({})
+                  #print("new day: ",res_days[i], par)
+                  i+=1
+                  regex_tags = re.compile(r"(Tags:.*(?=\n|$))+")
+                
+                  res_tags = re.findall(regex_tags,par)
+                  if res_tags:
+                     for r in res_tags:
+                        tags_day.update(re.findall('#(\w+)',r))
+                        tags_week.update(tags_day)#tags.update(re.findall('#(\w+)',line))
+                  #print(sorted(tags))
+               #for i in res:
+               #    print("It's a new day:\n",i)
+            
+            #print(len(res_days),len(res_pars))
+            
+            '''
+            Preparing for JSON
+            '''
+            
+            if days: 
+               week['days'] = days
+            if tags_week:
+               week['tags'] = list(tags_week)
+               for tag in tags_week:
+                  if not tag in years['tags']:
+                      years['tags'][tag] = {}
+                  if not year in years['tags'][tag]:
+                      years['tags'][tag][year] = []
+                  years['tags'][tag][year].append(week_num)
+                  years['tags'][tag][year].sort()
+            
+            years['years'][year]['weeks'][week_num] = week
+            
+            
+            """
             for line in f:
                 line = line.strip()
                 '''
@@ -123,12 +194,14 @@ def organize_repo():
                   years['tags'][tag][year].sort()
             
             years['years'][year]['weeks'][week_num] = week
+        """
     #print(years)
 
     '''
     3. Dumping into JSON file
     '''
     
+    #years['tags']
     json_file = os.path.join(rootdir,'DUMP.JSON')
     obj = json.dumps(years, indent=3)
     print(obj)        
