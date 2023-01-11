@@ -64,8 +64,8 @@ def organize_repo():
     }
     '''
     
-    years = {'years': {}, 'tags': {}}
-    tags_global = years['tags']
+    years = {'years': {}}
+    tags_global = {}#years['tags']
     
     for md in md_files:
         with open(md[1],encoding="utf-8") as f:
@@ -97,7 +97,7 @@ def organize_repo():
                if res:
                   week_num = int(res[0])
             if not week_num in years['years'][year_num]['weeks']: # Check for JSON object
-               years['years'][year_num]['weeks'][week_num] = {'days': {}, 'tags': {}}
+               years['years'][year_num]['weeks'][week_num] = {'days': {}}
             week = years['years'][year_num]['weeks'][week_num]
             
             '''
@@ -108,7 +108,7 @@ def organize_repo():
             days = re.findall(regex_days, text)
             for day in days:
                if not day in week: # Check for JSON object
-                  week['days'][day] = {'tags':[]} 
+                  week['days'][day] = None
 
             '''
             Finding the corresponding paragraph for each day.
@@ -154,10 +154,14 @@ def organize_repo():
                                  
                               if not days[i] in tags_global[tag]['years'][year_num]['weeks'][week_num]['days']: # Avoid duplicate days for each tag.
                                  tags_global[tag]['years'][year_num]['weeks'][week_num]['days'].append(days[i]) 
-                           
-                     week['days'][days[i]]['tags'] = list(tags_day) # JSON does not like sets.
+                     
+                     if tags_day:
+                        if not week['days'][days[i]]:
+                            week['days'][days[i]] = {}
+                        week['days'][days[i]]['tags'] = list(tags_day) # JSON does not like sets.
                   i+=1 # mMve on to next paragraph and thus day. 
-               week['tags'] = list(tags_week) #JSON doe not like sets. 
+               if tags_week:
+                  week['tags'] = list(tags_week) #JSON does not like sets. 
             
             '''
             Preparing for JSON
@@ -165,6 +169,8 @@ def organize_repo():
             
             week['file'] = os.path.relpath(md[1],rootdir)
             years['years'][year_num]['weeks'][week_num] = week
+    if tags_global:
+       years['tags'] = tags_global
 
     '''
     3. Dumping into JSON file
@@ -177,7 +183,7 @@ def organize_repo():
     with open(json_file,"w") as outfile:
        json.dump(years,outfile)
     
-    print('Ending')
+    print('Ending script')
 
 if __name__=='__main__':
   organize_repo()
