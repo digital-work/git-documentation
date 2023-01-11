@@ -64,10 +64,10 @@ def organize_repo():
     }
     '''
     
-    years = {'years': {}}
+    years = {'years': {}, 'tags': {}}
     
     for md in md_files:
-        with open(md[1],encoding="latin-1") as f:
+        with open(md[1],encoding="utf-8") as f:
             year         = md[0]
             #print(year)
             if not year in years['years']:
@@ -77,15 +77,17 @@ def organize_repo():
             week         = {}
             week['file'] = os.path.relpath(md[1],rootdir)
             days         = [] 
+            tags         = set({})
             for line in f:
                 line = line.strip()
                 '''
                 Finding week number.
                 '''
-                regex_week = re.compile(r"^\#.+?(?=Uke)\D*(\d+).*", re.IGNORECASE)
-                res = re.findall(regex_week,line)
-                if not week_num and res:
-                   week_num = int(res[0])
+                if not week_num:
+                   regex_week = re.compile(r"^\#.+?(?=Uke)\D*(\d+).*", re.IGNORECASE)
+                   res = re.findall(regex_week,line)
+                   if res:
+                      week_num = int(res[0])
                 
                 '''
                 Finding all days listed in file.
@@ -94,10 +96,34 @@ def organize_repo():
                 res = re.findall(regex_days, line)
                 if res:
                     days.append(res[0])
-            week['days']    = days
+                    
+                '''
+                Finding all tags listed in file.
+                '''
+                #regex_tags = re.compile(r"^Tags:.*#(\w+).+", re.IGNORECASE)
+                regex_tags = re.compile(r"Tags:.*")
+                
+                res = re.search(regex_tags,line)
+                if res:
+                   tags.update(re.findall('#(\w+)',line))
+                   #p = re.compile(r"#\w+", re.IGNORECASE)
+                   #res = re.findall(p,line)
+                   #print(res.group())
+            
+            if days: 
+               week['days'] = days
+            if tags:
+               week['tags'] = list(tags)
+               for tag in tags:
+                  if not tag in years['tags']:
+                      years['tags'][tag] = {}
+                  if not year in years['tags'][tag]:
+                      years['tags'][tag][year] = []
+                  years['tags'][tag][year].append(week_num)
+                  years['tags'][tag][year].sort()
             
             years['years'][year]['weeks'][week_num] = week
-    print(years)
+    #print(years)
 
     '''
     3. Dumping into JSON file
