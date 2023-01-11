@@ -6,15 +6,40 @@
   @author. joschua
 '''
 
+import argparse
+
 import os
+from subprocess import call, STDOUT
 import re
 
-def finding_tags():
+
+def organize_repo():
+    
+    parser = argparse.ArgumentParser("A command line script to organize a git repository containing images organized by year, month, and day.")
+ 
+    parser.add_argument("-p", "--path", help="Path to the target git repository. Default: Current folder.", default='.')
+
+    #parser.add_argument('-s', '--source_dir', help="Path to the source folder, in which the images are located. Default: Current folder.", default=".")
+    #parser.add_argument('-th', '--has_thumbs', help="Indicates if the image(s) has/have thumbnails. Default: False", action='store_true')
+  
+    args = parser.parse_args()
+ 
+    target_path = args.path
+    try: 
+       if not os.path.exists(target_path):
+          raise Exception("PathError. Chosen target path does not exist: {}".format(target_path))
+       if call(["git", "branch"], cwd=target_path, stderr=STDOUT, stdout=open(os.devnull, 'w')) != 0:
+          raise Exception("TypeError. Chosen directory is not a git repository: {}".format(target_path))
+       else:
+           print("Repo git check passed: {}.".format(target_path))
+    except Exception as e:
+       print("An error occured: {}.".format(e))    
+       return
     
     '''
     1. step: Find all the .md-files in the directory
     '''
-    rootdir = "."
+    rootdir = target_path
     regex   = re.compile(r'(UKE-\d{2}\.md$)')
     
     md_files = []
@@ -38,10 +63,10 @@ def finding_tags():
     weeks = {}
     
     for md in md_files:
-        with open(md) as f:
+        with open(md,encoding="latin-1") as f:
             week_num     = 0
             week         = {}
-            week['file'] = md
+            week['file'] = os.path.relpath(md,rootdir)
             days         = [] 
             for line in f:
                 regex_week = re.compile(r"^\#.+?(?=Uke).*\d+$", re.IGNORECASE)
@@ -65,4 +90,4 @@ def finding_tags():
     print(weeks)
 
 if __name__=='__main__':
-  finding_tags()
+  organize_repo()
