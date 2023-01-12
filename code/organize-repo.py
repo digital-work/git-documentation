@@ -44,6 +44,7 @@ def organize_repo():
  
    parser.add_argument("-p", "--path", help="Path to the target git repository. Default: Current folder.", default='.')
    parser.add_argument('-f', '--force', help="Forces the recomputation of the JSON.DUMP file. Default: False", action='store_true')
+   #parser.add_argument()
    args = parser.parse_args()
  
    target_path = args.path
@@ -81,6 +82,11 @@ def organize_repo():
       f.close()
       
       '''
+      Update week files
+      '''
+      update_UKEXX_files(json_file,target_path)
+      
+      '''
       Update overview in README.md file
       '''
       update_GLOSSARY_file(json_file, target_path)
@@ -95,6 +101,118 @@ def organize_repo():
       '''
       update_README_file(json_file, target_path)
 
+def find_paragraphs(h_level,header,repl_string,text):
+   
+   regex_pars = re.compile(r"(?:#{"+str(h_level)+"}\s+"+header+")([\s\S]*?)(?=\n{2}#{2}\s+|\Z)", re.MULTILINE) # 
+   res_pars   = re.findall(regex_pars,text)
+   res        = ""
+   if res_pars:
+      #print(repl_string) 
+      res = re.sub(regex_pars,repl_string,text)
+   else: 
+      res = text + "\n\n" + repl_string
+      
+   return res
+    
+
+def update_UKEXX_files(json_file,target_path):
+    
+   f        = open(json_file,'r')
+   json_obj = json.loads(f.read())
+   f.close()
+   
+   '''
+   Update navigation after H1
+   ''' 
+   
+   archive_file = os.path.join(target_path,'dokumenter','ARKIV.md')
+   archive_string  = ""
+   navigation_string = ""
+   git_string = ""
+   
+   '''
+   Update weekly overview.
+   We have to loop through all weeks twice to make the navigation at the top of the file.
+   '''
+
+   
+   week_count = 0
+   week_list = []
+   if 'years' in json_obj:
+      for year in json_obj['years']:
+         if 'weeks' in json_obj['years'][year]:
+            for week in json_obj['years'][year]['weeks']:
+               
+               if 1:
+                   week_file = as_posix(os.path.join(target_path,json_obj['years'][year]['weeks'][week]['file']))
+                   
+                   week_count += 1
+                   week_list.append((week,week_file))
+                   
+                   git_string = "## Oversikt\n\n" 
+                   if 'days' in json_obj['years'][year]['weeks'][week]:
+                      days =  json_obj['years'][year]['weeks'][week]['days']
+                      i = 0
+                      for k,v in days.items():
+                          git_string += "* [{}](#{})".format(k,k)+ ("\n" if i!=len(days.items())-1 else "")
+                          i += 1 
+                   
+                   f  = open(week_file,"r",encoding="utf-8")
+                   text = f.read()
+                   f.close()
+                   
+                   overview_string = find_paragraphs(2,r'Oversikt',git_string,text)
+                   
+                   f = open(week_file,"w",encoding="utf-8")
+                   f.write(overview_string)
+                   f.close()
+    
+   #print(week_list)               
+   uke_string = "" 
+   i = 0
+   archive_file = os.path.join(target_path,"dokumenter/ARKIV.md")
+   for week in week_list:
+      
+      week_num  = week[0] 
+      week_file = week[1]
+      navigation_string = ""
+   
+      header_string = "# Uke {}\n\n".format(week_num)
+   
+      if i:
+         print("hiersimmer")
+         prev_week_file = week_list[i-1][1]
+         print(prev_week_file,"    ",week_file)
+         rel_path       = as_posix(os.path.relpath(prev_week_file, os.path.dirname(week_file))) # Rel path to previous week
+         navigation_string += "[< Back]({}) |\n".format(rel_path)
+         
+      rel_path = as_posix(os.path.relpath(archive_file, os.path.dirname(week_file))) # Rel path to ARKIV.md
+      navigation_string += "[Home]({})".format(rel_path) 
+      
+      if i < len(week_list)-1:
+         next_week_file = week_list[i+1][1]
+         #print(prev_week_file,"    ",week_file)
+         rel_path       = as_posix(os.path.relpath(next_week_file, os.path.dirname(week_file))) # Rel path to next week
+         navigation_string += " |\n[Next >]({})\n\n".format(rel_path) 
+      else:
+         navigation_string += "\n\n" 
+         
+          
+      header_string += navigation_string+'[This header has been computed automatically.]'
+      
+      f = open(week_file,"r",encoding="utf-8")
+      text = f.read()
+      f.close()
+    
+      uke_string = find_paragraphs(1,r'Uke \d{1,2}',header_string,text)
+
+      f = open(week_file,"w",encoding="utf-8")
+      f.write(uke_string)
+      f.close()
+      i += 1
+   
+   
+   
 def update_GLOSSARY_file(json_file,target_path):
     
    f        = open(json_file,'r')
@@ -181,7 +299,7 @@ def update_ARKIV_file(json_file,target_path):
    if res_pars:
       archive_string = re.sub(regex_pars,overview_string,text)
    else: 
-      archive_string = text + '\n\n'+overview_string
+      archive_string += text + '\n\n'+overview_string
    
    f = open(archive_file,"w",encoding="utf-8")
    f.write(archive_string)
@@ -238,7 +356,7 @@ def update_README_file(json_file,target_path):
    if res_pars:
       readme_string = re.sub(regex_pars,overview_string,text)
    else: 
-      readme_string = text + '\n\n'+overview_string
+      readme_string += text + '\n\n'+overview_string
   
    f = open(readme_file,"w",encoding="utf-8")
    f.write(readme_string)
@@ -288,7 +406,6 @@ def create_JSON_representation(target_path):
     md_files = []
     
     for root, dirs, files in os.walk(rootdir):
-        print(root)
         for file in files:
             if regex.match(file):
                 reldir = os.path.relpath(root,rootdir)
@@ -409,7 +526,7 @@ def create_JSON_representation(target_path):
             Preparing for JSON
             '''
             
-            week['file'] = os.path.relpath(md[1],rootdir)
+            week['file'] = as_posix(os.path.relpath(md[1],rootdir))
             years['years'][year_num]['weeks'][week_num] = week
     if tags_global:
        tags_global = dict(sorted(tags_global.items()))
