@@ -81,31 +81,9 @@ def organize_repo():
       f.close()
       
       '''
-      Creating glossary file.
+      Update overview in README.md file
       '''
-       
-      glossar_file = os.path.join(target_path,'GLOSSARY.md')
-      git_string = ""
-      
-      if 'tags' in json_obj:
-         for tag in json_obj['tags']:
-             git_string += "* \#{}\n".format(tag)
-             day_string = ""
-             for year in json_obj['tags'][tag]['years']:
-                for week in json_obj['tags'][tag]['years'][year]['weeks']:
-                    for day in json_obj['tags'][tag]['years'][year]['weeks'][week]['days']:
-                       '''
-                       Get rel path to .md file.
-                       '''
-                       md_file = json_obj['years'][year]['weeks'][week]['file'] 
-                       
-                       day_string += "[{}]({}#{}) ".format(day,md_file,day)
-             day_string = day_string.strip().replace(" ", ", ")
-             git_string += "    * {}\n".format(day_string)
-      glossar_string = "# Glossary\n\nThis glossary has been computed automatically.\n\n## Overview\n\n{}".format(git_string)
-      g = open(glossar_file,"w")
-      g.write(glossar_string)
-      g.close()
+      update_GLOSSARY_file(json_file, target_path)
       
       """
       Creating archive file.
@@ -164,6 +142,41 @@ def organize_repo():
       '''
       
       update_README_file(json_file, target_path)
+
+def update_GLOSSARY_file(json_file,target_path):
+    
+   f        = open(json_file,'r')
+   json_obj = json.loads(f.read())
+   f.close()
+   
+   '''
+    Creating glossary file.
+   '''
+       
+   glossar_file = os.path.join(target_path,'GLOSSARY.md')
+   git_string = ""
+  
+   if 'tags' in json_obj:
+      for tag in json_obj['tags']:
+         git_string += "* \#{}\n".format(tag)
+         day_string = ""
+         for year in json_obj['tags'][tag]['years']:
+            for week in json_obj['tags'][tag]['years'][year]['weeks']:
+               for day in json_obj['tags'][tag]['years'][year]['weeks'][week]['days']:
+                  '''
+                  Get rel path to .md file.
+                  '''
+                  md_file = json_obj['years'][year]['weeks'][week]['file'] 
+                  
+                  day_string += "[{}]({}#{}) ".format(day,md_file,day)
+         day_string = day_string.strip().replace(" ", ", ")
+         git_string += "    * {}\n".format(day_string)
+   glossar_string = "# Glossary\n\nThis glossary has been computed automatically.\n\n## Overview\n\n{}".format(git_string)
+   
+   g = open(glossar_file,"w")
+   g.write(glossar_string)
+   g.close()
+      
       
 def update_README_file(json_file,target_path):
    
