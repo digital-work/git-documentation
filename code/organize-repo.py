@@ -118,9 +118,10 @@ def update_GLOSSARY_file(json_file,target_path):
                   '''
                   Get rel path to .md file.
                   '''
-                  md_file = json_obj['years'][year]['weeks'][week]['file'] 
+                  md_file = os.path.join(target_path,json_obj['years'][year]['weeks'][week]['file']) 
+                  rel_path = os.path.relpath(md_file, target_path)
                   
-                  day_string += "[{}]({}#{}) ".format(day,md_file,day)
+                  day_string += "[{}]({}#{}) ".format(day,as_posix(rel_path),day)
          day_string = day_string.strip().replace(" ", ", ")
          git_string += "    * {}\n".format(day_string)
    glossar_string = "# Glossary\n\nThis glossary has been computed automatically.\n\n## Overview\n\n{}".format(git_string)
