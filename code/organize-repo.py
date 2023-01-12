@@ -14,7 +14,6 @@ import re
 
 import json
 
-
 def organize_repo():
     
    parser = argparse.ArgumentParser("A command line script to organize a git repository containing images organized by year, month, and day.")
@@ -203,10 +202,12 @@ def create_JSON_representation(target_path):
                      if tags_day:
                         if not week['days'][days[i]]:
                             week['days'][days[i]] = {}
-                        week['days'][days[i]]['tags'] = list(tags_day) # JSON does not like sets.
+                        week['days'][days[i]]['tags'] = list(sorted(tags_day)) # JSON does not like sets.
                   i+=1 # mMve on to next paragraph and thus day. 
                if tags_week:
-                  week['tags'] = list(tags_week) #JSON does not like sets. 
+                  #print(tags_week)
+                  #print(sorted(tags_week))
+                  week['tags'] = list(sorted(tags_week)) #JSON does not like sets. 
             
             '''
             Preparing for JSON
@@ -215,6 +216,7 @@ def create_JSON_representation(target_path):
             week['file'] = os.path.relpath(md[1],rootdir)
             years['years'][year_num]['weeks'][week_num] = week
     if tags_global:
+       tags_global = dict(sorted(tags_global.items()))
        years['tags'] = tags_global
 
     '''
