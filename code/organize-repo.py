@@ -121,10 +121,6 @@ def update_UKEXX_files(json_file,target_path):
    json_obj = json.loads(f.read())
    f.close()
    
-   '''
-   Update navigation after H1
-   ''' 
-   
    archive_file = os.path.join(target_path,'dokumenter','ARKIV.md')
    archive_string  = ""
    navigation_string = ""
@@ -134,8 +130,7 @@ def update_UKEXX_files(json_file,target_path):
    Update weekly overview.
    We have to loop through all weeks twice to make the navigation at the top of the file.
    '''
-
-   
+  
    week_count = 0
    week_list = []
    if 'years' in json_obj:
@@ -166,8 +161,11 @@ def update_UKEXX_files(json_file,target_path):
                    f = open(week_file,"w",encoding="utf-8")
                    f.write(overview_string)
                    f.close()
+   
+   '''
+   Update navigation after H1
+   ''' 
     
-   #print(week_list)               
    uke_string = "" 
    i = 0
    archive_file = os.path.join(target_path,"dokumenter/ARKIV.md")
@@ -180,7 +178,6 @@ def update_UKEXX_files(json_file,target_path):
       header_string = "# Uke {}\n\n".format(week_num)
    
       if i:
-         print("hiersimmer")
          prev_week_file = week_list[i-1][1]
          print(prev_week_file,"    ",week_file)
          rel_path       = as_posix(os.path.relpath(prev_week_file, os.path.dirname(week_file))) # Rel path to previous week
@@ -191,12 +188,10 @@ def update_UKEXX_files(json_file,target_path):
       
       if i < len(week_list)-1:
          next_week_file = week_list[i+1][1]
-         #print(prev_week_file,"    ",week_file)
          rel_path       = as_posix(os.path.relpath(next_week_file, os.path.dirname(week_file))) # Rel path to next week
          navigation_string += " |\n[Next >]({})\n\n".format(rel_path) 
       else:
          navigation_string += "\n\n" 
-         
           
       header_string += navigation_string+'[This header has been computed automatically.]'
       
@@ -210,8 +205,6 @@ def update_UKEXX_files(json_file,target_path):
       f.write(uke_string)
       f.close()
       i += 1
-   
-   
    
 def update_GLOSSARY_file(json_file,target_path):
     
