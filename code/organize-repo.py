@@ -96,7 +96,8 @@ def organize_repo():
       #datetime.datetime.strptime("2023-01-01","%Y-%m-%d").isocalendar()[1]
       
       archive_file = os.path.join(target_path,'dokumenter','ARKIV.md')
-      archive_string = "# Archive\n\n##  Overview\n\nThis overview has been computed automatically.\n\n"
+      archive_strig = ""
+      overview_string = "##  Overview\n\nThis overview has been computed automatically.\n\n"
       git_string = ""
       
       if 'years' in json_obj:
@@ -120,11 +121,22 @@ def organize_repo():
                      for day in json_obj['years'][year]['weeks'][week]['days']:
                         git_string += "          * [{}]({}#{})\n".format(day,week_file,day)
       
-      archive_string += git_string
+      overview_string += git_string+'\n'
       
-      g = open(archive_file,"w")
-      g.write(archive_string)
-      g.close()
+      f = open(archive_file,"r",encoding="utf-8")
+      text = f.read()
+      f.close()
+      
+      
+      #print(text)
+      regex_pars = re.compile(r"(?:#{2}\s+Overview)([\s\S]*?)(?=#{2}\s+|\Z)", re.MULTILINE)
+      res_pars = re.findall(regex_pars,text)
+      if res_pars:
+         archive_string = re.sub(regex_pars,overview_string,text)
+      
+      f = open(archive_file,"w",encoding="utf-8")
+      f.write(archive_string)
+      f.close()
       
    else: 
       print("Creating new DUMP.JSON file.")
