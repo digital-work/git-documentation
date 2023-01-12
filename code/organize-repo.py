@@ -208,18 +208,18 @@ def update_README_file(json_file,target_path):
    rootdir = target_path
    regex   = re.compile(r'(.+\.md$)|(.+\.pdf)',re.IGNORECASE) # Only list .md and .pdf files
             
-   file_tree = create_tree_of_all_files(target_path)
-   b = dict_walk([],file_tree,".")
+   file_tree = get_README_overview_tree(target_path)
+   b = walk_for_README_overview([],file_tree,".")
    git_string = ""
    for v in b:
       ind = v[1].count('/')
       if ind:
          git_string += " "+ind*"   "
       path_from_root = as_posix(os.path.join(target_path,v[1]))
-      curr_path = as_posix(v[1]) # Make it consistent on Mac and PC
+      rel_path = as_posix(os.path.relpath(path_from_root,target_path)) # Make it consistent on Mac and PC
       url       = v[0]
       if os.path.isfile(path_from_root): 
-         git_string += "* [{}]({})\n".format(url,curr_path) # Only files have links.
+         git_string += "* [{}]({})\n".format(url,rel_path) # Only files have links.
       else:
          git_string += "* {}/\n".format(url) # Directories do not have links.
    
@@ -244,7 +244,8 @@ def update_README_file(json_file,target_path):
    f.write(readme_string)
    f.close()
 
-def dict_walk(arr,d,path):
+def walk_for_README_overview(arr,d,path):
+   
    for k, v in d.items():
       file_path = os.path.join(path,k)
       file_path = as_posix(file_path)
@@ -253,11 +254,11 @@ def dict_walk(arr,d,path):
       #if isinstance(v, dict):   # option 2 with "isinstance()"
          new_path = os.path.join(path,k)
          new_path = as_posix(new_path)
-         dict_walk(arr,v,new_path)
+         walk_for_README_overview(arr,v,new_path)
       
    return arr 
 
-def create_tree_of_all_files(path_):
+def get_README_overview_tree(path_):
    '''
    Source: https://stackoverflow.com/questions/9727673/list-directory-tree-structure-in-python
    '''
@@ -270,7 +271,7 @@ def create_tree_of_all_files(path_):
       tree = {}
       for d in dirs:
          if not regex_dirs.match(d):
-            tree.update({d: create_tree_of_all_files(os.path.join(root, d))})
+            tree.update({d: get_README_overview_tree(os.path.join(root, d))})
       for f in files:
          if regex_files.match(f):
             tree.update({f: file_token})
