@@ -162,9 +162,8 @@ def update_ARKIV_file(json_file,target_path):
                   month_count=month
                week_file = ""
                if 'file' in json_obj['years'][year]['weeks'][week]:
-                  week_file = json_obj['years'][year]['weeks'][week]['file']
-                  week_file = os.path.join(target_path,week_file) # Week file has to start from same point as archive file.
-                  week_file = pathlib.PurePath(os.path.relpath(week_file,os.path.dirname(archive_file))).as_posix() # Start must be directory
+                  week_file = os.path.join(target_path,json_obj['years'][year]['weeks'][week]['file']) # Week file has to start from same point as archive file for computation of rel path.
+                  week_file = as_posix(os.path.relpath(week_file,os.path.dirname(archive_file))) # Start must be directory
                git_string += "       * [UKE-{:02d}.md]({})\n".format(int(week),week_file)
                
                if 'days'in json_obj['years'][year]['weeks'][week]:
