@@ -134,18 +134,18 @@ def organize_repo():
                      for day in json_obj['years'][year]['weeks'][week]['days']:
                         git_string += "          * [{}]({}#{})\n".format(day,week_file,day)
       
-      overview_string += git_string+'´\n[This overview has been computed automatically.]\n\n'
+      overview_string += git_string+'´\n[This overview has been computed automatically.]'
       
       f = open(archive_file,"r",encoding="utf-8")
       text = f.read()
       f.close()
       
-      regex_pars = re.compile(r"(?:#{2}\s+Overview)([\s\S]*?)(?=#{2}\s+|\Z)", re.MULTILINE)
+      regex_pars = re.compile(r"(?:#{2}\s+Overview)([\s\S]*?)(?=\n{2}#{2}\s+|\Z)", re.MULTILINE)
       res_pars = re.findall(regex_pars,text)
       if res_pars:
          archive_string = re.sub(regex_pars,overview_string,text)
       else: 
-         archive_string += overview_string
+         archive_string = text + '\n\n'+overview_string
       
       f = open(archive_file,"w",encoding="utf-8")
       f.write(archive_string)
