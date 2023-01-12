@@ -180,10 +180,26 @@ def update_README_file(json_file,target_path):
    regex   = re.compile(r'(.+\.md$)|(.+\.pdf)',re.IGNORECASE)
             
    file_tree = create_tree_of_all_files(target_path)
-   for i in file_tree:
-      print(file_tree[i])
+   print(file_tree)
+   print('hiersimmer')
+   get_all_keys(file_tree)
+   #for x in get_all_keys(file_tree):
+   #   print(x)
+   print('dosimmer')
    
    #print(file_tree)
+
+def get_all_keys(d):
+   ''''
+   Source: https://stackoverflow.com/questions/43752962/how-to-iterate-through-a-nested-dict
+   '''
+   
+   print('hiersimmer1')  
+   for key, value in d.items():
+      print(value)
+      yield key
+      if isinstance(value, dict):
+         yield from get_all_keys(value)
 
 def create_tree_of_all_files(path_):
    '''
