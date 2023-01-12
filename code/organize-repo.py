@@ -58,7 +58,7 @@ def organize_repo():
       
       if 'tags' in json_obj:
          for tag in json_obj['tags']:
-             git_string += "* {}\n".format(tag)
+             git_string += "* \#{}\n".format(tag)
              day_string = ""
              for year in json_obj['tags'][tag]['years']:
                 for week in json_obj['tags'][tag]['years'][year]['weeks']:
@@ -205,8 +205,6 @@ def create_JSON_representation(target_path):
                         week['days'][days[i]]['tags'] = list(sorted(tags_day)) # JSON does not like sets.
                   i+=1 # mMve on to next paragraph and thus day. 
                if tags_week:
-                  #print(tags_week)
-                  #print(sorted(tags_week))
                   week['tags'] = list(sorted(tags_week)) #JSON does not like sets. 
             
             '''
