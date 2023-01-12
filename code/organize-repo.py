@@ -179,7 +179,6 @@ def update_UKEXX_files(json_file,target_path):
    
       if i:
          prev_week_file = week_list[i-1][1]
-         print(prev_week_file,"    ",week_file)
          rel_path       = as_posix(os.path.relpath(prev_week_file, os.path.dirname(week_file))) # Rel path to previous week
          navigation_string += "[< Back]({}) |\n".format(rel_path)
          
@@ -235,7 +234,13 @@ def update_GLOSSARY_file(json_file,target_path):
                   day_string += "[{}]({}#{}) ".format(day,as_posix(rel_path),day)
          day_string = day_string.strip().replace(" ", ", ")
          git_string += "    * {}\n".format(day_string)
-   glossar_string = "# Glossary\n\nThis glossary has been computed automatically.\n\n## Overview\n\n{}".format(git_string)
+   glossar_string = "# Glossary\n\n"
+   
+   readme_file = as_posix(os.path.join(target_path,"README.md"))
+   rel_path = as_posix(os.path.relpath(readme_file,os.path.dirname(glossar_file)))
+   glossar_string += "[Home]({})\n\n".format(rel_path)
+   
+   glossar_string += "This glossary has been computed automatically.\n\n## Overview\n\n{}".format(git_string)
    
    g = open(glossar_file,"w")
    g.write(glossar_string)
