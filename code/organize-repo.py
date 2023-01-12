@@ -54,7 +54,7 @@ def organize_repo():
       Creating glossary file.
       '''
        
-      glossar_file = os.path.join(target_path,'GLOSSAR.md')
+      glossar_file = os.path.join(target_path,'GLOSSARY.md')
       git_string = ""
       
       if 'tags' in json_obj:
@@ -69,7 +69,7 @@ def organize_repo():
                        '''
                        md_file = json_obj['years'][year]['weeks'][week]['file'] 
                        
-                       day_string += "[{}]({}) ".format(day,md_file)
+                       day_string += "[{}]({}#{}) ".format(day,md_file,day)
              day_string = day_string.strip().replace(" ", ", ")
              git_string += "    * {}\n".format(day_string)
       glossar_string = "# Glossar\n\nThis glossary has been computed automatically.\n\n## Overview\n\n{}".format(git_string)
