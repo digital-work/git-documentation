@@ -12,6 +12,7 @@ import os
 from subprocess import call, STDOUT
 import re
 
+import pathlib
 import json
 
 import datetime
@@ -128,14 +129,14 @@ def organize_repo():
                   if 'file' in json_obj['years'][year]['weeks'][week]:
                      week_file = json_obj['years'][year]['weeks'][week]['file']
                      week_file = os.path.join(target_path,week_file) # Week file has to start from same point as archive file.
-                     week_file = os.path.relpath(week_file,os.path.dirname(archive_file)) # Start must be directory
+                     week_file = pathlib.PurePath(os.path.relpath(week_file,os.path.dirname(archive_file))).as_posix() # Start must be directory
                   git_string += "       * [UKE-{:02d}.md]({})\n".format(int(week),week_file)
                   
                   if 'days'in json_obj['years'][year]['weeks'][week]:
                      for day in json_obj['years'][year]['weeks'][week]['days']:
                         git_string += "          * [{}]({}#{})\n".format(day,week_file,day)
-      
-      overview_string += git_string+'´\n[This overview has been computed automatically.]'
+
+      overview_string += git_string+'\n[This overview has been computed automatically.]'
       
       f = open(archive_file,"r",encoding="utf-8")
       text = f.read()
