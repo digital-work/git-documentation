@@ -32,6 +32,12 @@ def get_month_str(year,week):
    
    return month_id, month_str
 
+def as_posix(path):
+    
+   path = pathlib.PurePath(path).as_posix()
+   
+   return path
+
 def organize_repo():
     
    parser = argparse.ArgumentParser("A command line script to organize a git repository containing images organized by year, month, and day.")
@@ -165,42 +171,69 @@ def update_README_file(json_file,target_path):
    json_obj = json.loads(f.read())
    f.close()
    
-   archive_file = os.path.join(target_path,'README.md')
+   readme_file = os.path.join(target_path,'README.md')
    readme_string  = ""
-   if not os.path.exists(archive_file):
-      print("README.md does not exist. Please create file ine: {}.".format(target_path))
+   if not os.path.exists(readme_file):
+      print("README.md does not exist. Please create file in: {}.".format(target_path))
       return
    overview_string = "##  Overview\n\n"
    git_string = ""
    
    '''
-   Travers all folders again
+   Creating overview string by traversing all folders again
    ''' 
    
    rootdir = target_path
-   regex   = re.compile(r'(.+\.md$)|(.+\.pdf)',re.IGNORECASE)
+   regex   = re.compile(r'(.+\.md$)|(.+\.pdf)',re.IGNORECASE) # Only list .md and .pdf files
             
    file_tree = create_tree_of_all_files(target_path)
-   print(file_tree)
-   print('hiersimmer')
-   get_all_keys(file_tree)
-   #for x in get_all_keys(file_tree):
-   #   print(x)
-   print('dosimmer')
+   b = dict_walk([],file_tree,".")
+   git_string = ""
+   for v in b:
+      ind = v[1].count('/')
+      if ind:
+         git_string += " "+ind*"   "
+      path_from_root = as_posix(os.path.join(target_path,v[1]))
+      curr_path = as_posix(v[1]) # Make it consistent on Mac and PC
+      url       = v[0]
+      if os.path.isfile(path_from_root): 
+         git_string += "* [{}]({})\n".format(url,curr_path) # Only files have links.
+      else:
+         git_string += "* {}/\n".format(url) # Directories do not have links.
    
-   #print(file_tree)
-
-def get_all_keys(d):
-   ''''
-   Source: https://stackoverflow.com/questions/43752962/how-to-iterate-through-a-nested-dict
+   overview_string += git_string+'\n[This overview has been computed automatically.]'
+      
    '''
-   
-   print('hiersimmer1')  
-   for key, value in d.items():
-      print(value)
-      yield key
-      if isinstance(value, dict):
-         yield from get_all_keys(value)
+   Replace existing overview section indicated by "## Overview"
+   '''
+
+   f = open(readme_file,"r",encoding="utf-8")
+   text = f.read()
+   f.close()
+    
+   regex_pars = re.compile(r"(?:#{2}\s+Overview)([\s\S]*?)(?=\n{2}#{2}\s+|\Z)", re.MULTILINE)
+   res_pars = re.findall(regex_pars,text)
+   if res_pars:
+      readme_string = re.sub(regex_pars,overview_string,text)
+   else: 
+      readme_string = text + '\n\n'+overview_string
+  
+   f = open(readme_file,"w",encoding="utf-8")
+   f.write(readme_string)
+   f.close()
+
+def dict_walk(arr,d,path):
+   for k, v in d.items():
+      file_path = os.path.join(path,k)
+      file_path = as_posix(file_path)
+      arr.append((k,file_path)) 
+      if type(v) == dict:   # option 1 with "type()"
+      #if isinstance(v, dict):   # option 2 with "isinstance()"
+         new_path = os.path.join(path,k)
+         new_path = as_posix(new_path)
+         dict_walk(arr,v,new_path)
+      
+   return arr 
 
 def create_tree_of_all_files(path_):
    '''
@@ -209,7 +242,7 @@ def create_tree_of_all_files(path_):
    
    file_token  = ''
    regex_files = re.compile(r'(.+\.md$)|(.+\.pdf)',re.IGNORECASE)
-   regex_dirs  = re.compile(r'.git',re.IGNORECASE)
+   regex_dirs  = re.compile(r'^\..+|^media',re.IGNORECASE)
    
    for root, dirs, files in os.walk(path_):
       tree = {}
