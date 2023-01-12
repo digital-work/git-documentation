@@ -85,62 +85,14 @@ def organize_repo():
       '''
       update_GLOSSARY_file(json_file, target_path)
       
-      """
-      Creating archive file.
-      """
-      #datetime.datetime.strptime("2023-01-01","%Y-%m-%d").isocalendar()[1]
-      
-      archive_file = os.path.join(target_path,'dokumenter','ARKIV.md')
-      archive_string  = ""
-      if not os.path.exists(archive_file):
-         f = open(archive_file,"w")
-         f.close()
-         archive_string += "# Archive \n\n"
-      overview_string = "##  Overview\n\n"
-      git_string = ""
-      
-      if 'years' in json_obj:
-         for year in json_obj['years']:
-            git_string += "* {}/\n".format(year)
-            month_count = 0
-            if 'weeks' in json_obj['years'][year]:
-               for week in json_obj['years'][year]['weeks']:
-                  month,month_str = get_month_str(year, week)
-                  if month_count!=month:
-                     git_string += "    * {}/\n".format(month_str)
-                     month_count=month
-                  week_file = ""
-                  if 'file' in json_obj['years'][year]['weeks'][week]:
-                     week_file = json_obj['years'][year]['weeks'][week]['file']
-                     week_file = os.path.join(target_path,week_file) # Week file has to start from same point as archive file.
-                     week_file = pathlib.PurePath(os.path.relpath(week_file,os.path.dirname(archive_file))).as_posix() # Start must be directory
-                  git_string += "       * [UKE-{:02d}.md]({})\n".format(int(week),week_file)
-                  
-                  if 'days'in json_obj['years'][year]['weeks'][week]:
-                     for day in json_obj['years'][year]['weeks'][week]['days']:
-                        git_string += "          * [{}]({}#{})\n".format(day,week_file,day)
-
-      overview_string += git_string+'\n[This overview has been computed automatically.]'
-      
-      f = open(archive_file,"r",encoding="utf-8")
-      text = f.read()
-      f.close()
-      
-      regex_pars = re.compile(r"(?:#{2}\s+Overview)([\s\S]*?)(?=\n{2}#{2}\s+|\Z)", re.MULTILINE)
-      res_pars = re.findall(regex_pars,text)
-      if res_pars:
-         archive_string = re.sub(regex_pars,overview_string,text)
-      else: 
-         archive_string = text + '\n\n'+overview_string
-      
-      f = open(archive_file,"w",encoding="utf-8")
-      f.write(archive_string)
-      f.close()
+      '''
+      Update overview in README.md file
+      '''
+      update_ARKIV_file(json_file, target_path)      
       
       '''
       Update overview in README.md file
       '''
-      
       update_README_file(json_file, target_path)
 
 def update_GLOSSARY_file(json_file,target_path):
@@ -176,7 +128,64 @@ def update_GLOSSARY_file(json_file,target_path):
    g = open(glossar_file,"w")
    g.write(glossar_string)
    g.close()
-      
+ 
+def update_ARKIV_file(json_file,target_path):
+    
+   f        = open(json_file,'r')
+   json_obj = json.loads(f.read())
+   f.close()
+   
+   """
+   Creating archive file.
+   """
+   #datetime.datetime.strptime("2023-01-01","%Y-%m-%d").isocalendar()[1]
+
+   archive_file = os.path.join(target_path,'dokumenter','ARKIV.md')
+   archive_string  = ""
+   if not os.path.exists(archive_file):
+      f = open(archive_file,"w")
+      f.close()
+      archive_string += "# Archive \n\n"
+   overview_string = "##  Overview\n\n"
+   git_string = ""
+   
+   if 'years' in json_obj:
+      for year in json_obj['years']:
+         git_string += "* {}/\n".format(year)
+         month_count = 0
+         if 'weeks' in json_obj['years'][year]:
+            for week in json_obj['years'][year]['weeks']:
+               month,month_str = get_month_str(year, week)
+               if month_count!=month:
+                  git_string += "    * {}/\n".format(month_str)
+                  month_count=month
+               week_file = ""
+               if 'file' in json_obj['years'][year]['weeks'][week]:
+                  week_file = json_obj['years'][year]['weeks'][week]['file']
+                  week_file = os.path.join(target_path,week_file) # Week file has to start from same point as archive file.
+                  week_file = pathlib.PurePath(os.path.relpath(week_file,os.path.dirname(archive_file))).as_posix() # Start must be directory
+               git_string += "       * [UKE-{:02d}.md]({})\n".format(int(week),week_file)
+               
+               if 'days'in json_obj['years'][year]['weeks'][week]:
+                  for day in json_obj['years'][year]['weeks'][week]['days']:
+                     git_string += "          * [{}]({}#{})\n".format(day,week_file,day)
+
+   overview_string += git_string+'\n[This overview has been computed automatically.]'
+
+   f = open(archive_file,"r",encoding="utf-8")
+   text = f.read()
+   f.close()
+
+   regex_pars = re.compile(r"(?:#{2}\s+Overview)([\s\S]*?)(?=\n{2}#{2}\s+|\Z)", re.MULTILINE)
+   res_pars = re.findall(regex_pars,text)
+   if res_pars:
+      archive_string = re.sub(regex_pars,overview_string,text)
+   else: 
+      archive_string = text + '\n\n'+overview_string
+   
+   f = open(archive_file,"w",encoding="utf-8")
+   f.write(archive_string)
+   f.close()
       
 def update_README_file(json_file,target_path):
    
