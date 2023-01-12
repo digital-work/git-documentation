@@ -36,7 +36,7 @@ def organize_repo():
    parser = argparse.ArgumentParser("A command line script to organize a git repository containing images organized by year, month, and day.")
  
    parser.add_argument("-p", "--path", help="Path to the target git repository. Default: Current folder.", default='.')
-
+   parser.add_argument('-f', '--force', help="Forces the recomputation of the JSON.DUMP file. Default: False", action='store_true')
    args = parser.parse_args()
  
    target_path = args.path
@@ -55,9 +55,18 @@ def organize_repo():
    Check if JSON representation already exists.
    '''
   
-   
+   force=args.force # if True, compute DUMP.JSON
    json_file = os.path.join(target_path,'DUMP.JSON')
-   if os.path.exists(json_file):
+   
+   if force or not os.path.exists(json_file): 
+      explanation = ""
+      if not os.path.exists(json_file):
+         explanation = "Creating new DUMP.JSON file."
+      elif force: 
+         explanation = "Recomputing DUMP.JSON as requested by the user."
+      print(explanation)
+      create_JSON_representation(target_path)
+   else:
       print('The DUMP.JSON file already exists. Reading data from file.')
       
       f        = open(json_file,'r')
@@ -137,10 +146,6 @@ def organize_repo():
       f = open(archive_file,"w",encoding="utf-8")
       f.write(archive_string)
       f.close()
-      
-   else: 
-      print("Creating new DUMP.JSON file.")
-      create_JSON_representation(target_path)
 
 def create_JSON_representation(target_path):
     
