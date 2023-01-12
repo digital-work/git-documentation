@@ -71,6 +71,7 @@ def organize_repo():
       
       f        = open(json_file,'r')
       json_obj = json.loads(f.read())
+      f.close()
       
       '''
       Creating glossary file.
@@ -150,6 +151,58 @@ def organize_repo():
       f = open(archive_file,"w",encoding="utf-8")
       f.write(archive_string)
       f.close()
+      
+      '''
+      Update overview in README.md file
+      '''
+      
+      update_README_file(json_file, target_path)
+      
+def update_README_file(json_file,target_path):
+   
+   f        = open(json_file,'r')
+   json_obj = json.loads(f.read())
+   f.close()
+   
+   archive_file = os.path.join(target_path,'README.md')
+   readme_string  = ""
+   if not os.path.exists(archive_file):
+      print("README.md does not exist. Please create file ine: {}.".format(target_path))
+      return
+   overview_string = "##  Overview\n\n"
+   git_string = ""
+   
+   '''
+   Travers all folders again
+   ''' 
+   
+   rootdir = target_path
+   regex   = re.compile(r'(.+\.md$)|(.+\.pdf)',re.IGNORECASE)
+            
+   file_tree = create_tree_of_all_files(target_path)
+   for i in file_tree:
+      print(file_tree[i])
+   
+   #print(file_tree)
+
+def create_tree_of_all_files(path_):
+   '''
+   Source: https://stackoverflow.com/questions/9727673/list-directory-tree-structure-in-python
+   '''
+   
+   file_token  = ''
+   regex_files = re.compile(r'(.+\.md$)|(.+\.pdf)',re.IGNORECASE)
+   regex_dirs  = re.compile(r'.git',re.IGNORECASE)
+   
+   for root, dirs, files in os.walk(path_):
+      tree = {}
+      for d in dirs:
+         if not regex_dirs.match(d):
+            tree.update({d: create_tree_of_all_files(os.path.join(root, d))})
+      for f in files:
+         if regex_files.match(f):
+            tree.update({f: file_token})
+      return tree  # note we discontinue iteration trough os.walk
 
 def create_JSON_representation(target_path):
     
@@ -162,6 +215,7 @@ def create_JSON_representation(target_path):
     md_files = []
     
     for root, dirs, files in os.walk(rootdir):
+        print(root)
         for file in files:
             if regex.match(file):
                 reldir = os.path.relpath(root,rootdir)
