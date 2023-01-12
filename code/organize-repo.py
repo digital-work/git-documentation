@@ -14,15 +14,29 @@ import re
 
 import json
 
+import datetime
+from dateutil.relativedelta import relativedelta
+import locale
+
+def get_month_str(year,week):
+   
+   month_str = ""
+   
+   date = datetime.date(int(year), 1, 1) + relativedelta(weeks=+int(week))
+   
+   locale.setlocale(locale.LC_TIME, 'no_NO.UTF-8')
+   month_id  = date.strftime("%m")
+   month     = date.strftime("%B").capitalize()
+   month_str = "{}_{}".format(month_id,month)
+   
+   return month_id, month_str
+
 def organize_repo():
     
    parser = argparse.ArgumentParser("A command line script to organize a git repository containing images organized by year, month, and day.")
  
    parser.add_argument("-p", "--path", help="Path to the target git repository. Default: Current folder.", default='.')
 
-   #parser.add_argument('-s', '--source_dir', help="Path to the source folder, in which the images are located. Default: Current folder.", default=".")
-   #parser.add_argument('-th', '--has_thumbs', help="Indicates if the image(s) has/have thumbnails. Default: False", action='store_true')
-  
    args = parser.parse_args()
  
    target_path = args.path
@@ -71,9 +85,45 @@ def organize_repo():
                        day_string += "[{}]({}#{}) ".format(day,md_file,day)
              day_string = day_string.strip().replace(" ", ", ")
              git_string += "    * {}\n".format(day_string)
-      glossar_string = "# Glossar\n\nThis glossary has been computed automatically.\n\n## Overview\n\n{}".format(git_string)
+      glossar_string = "# Glossary\n\nThis glossary has been computed automatically.\n\n## Overview\n\n{}".format(git_string)
       g = open(glossar_file,"w")
       g.write(glossar_string)
+      g.close()
+      
+      """
+      Creating archive file.
+      """
+      #datetime.datetime.strptime("2023-01-01","%Y-%m-%d").isocalendar()[1]
+      
+      archive_file = os.path.join(target_path,'dokumenter','ARKIV.md')
+      archive_string = "# Archive\n\n##  Overview\n\nThis overview has been computed automatically.\n\n"
+      git_string = ""
+      
+      if 'years' in json_obj:
+         for year in json_obj['years']:
+            git_string += "* {}/\n".format(year)
+            month_count = 0
+            if 'weeks' in json_obj['years'][year]:
+               for week in json_obj['years'][year]['weeks']:
+                  month,month_str = get_month_str(year, week)
+                  if month_count!=month:
+                     git_string += "    * {}/\n".format(month_str)
+                     month_count=month
+                  week_file = ""
+                  if 'file' in json_obj['years'][year]['weeks'][week]:
+                     week_file = json_obj['years'][year]['weeks'][week]['file']
+                     week_file = os.path.join(target_path,week_file) # Week file has to start from same point as archive file.
+                     week_file = os.path.relpath(week_file,os.path.dirname(archive_file)) # Start must be directory
+                  git_string += "       * [UKE-{:02d}.md]({})\n".format(int(week),week_file)
+                  
+                  if 'days'in json_obj['years'][year]['weeks'][week]:
+                     for day in json_obj['years'][year]['weeks'][week]['days']:
+                        git_string += "          * [{}]({}#{})\n".format(day,week_file,day)
+      
+      archive_string += git_string
+      
+      g = open(archive_file,"w")
+      g.write(archive_string)
       g.close()
       
    else: 
