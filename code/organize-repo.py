@@ -389,18 +389,30 @@ def update_GLOSSARY_file(json_file,target_path):
       for tag in json_obj['tags']:
          git_string += "* \#{}\n".format(tag)
          day_string = ""
-         for year in json_obj['tags'][tag]['years']:
-            for week in json_obj['tags'][tag]['years'][year]['weeks']:
-               for day in json_obj['tags'][tag]['years'][year]['weeks'][week]['days']:
+         if 'years' in json_obj['tags'][tag]:
+            for year in json_obj['tags'][tag]['years']:
+               for week in json_obj['tags'][tag]['years'][year]['weeks']:
+                  for day in json_obj['tags'][tag]['years'][year]['weeks'][week]['days']:
+                     '''
+                     Get rel path to .md file.
+                     '''
+                     md_file = os.path.join(target_path,json_obj['years'][year]['weeks'][week]['file']) 
+                     rel_path = os.path.relpath(md_file, target_path)
+                      
+                     day_string += "[{}]({}#{}) ".format(day,as_posix(rel_path),day)
+         if 'others' in json_obj['tags'][tag]:
+            for md in json_obj['tags'][tag]['others']:
+               for day in json_obj['tags'][tag]['others'][md]['days']:
                   '''
                   Get rel path to .md file.
                   '''
-                  md_file = os.path.join(target_path,json_obj['years'][year]['weeks'][week]['file']) 
+                  md_file = os.path.join(target_path,json_obj['others'][md]['file']) 
                   rel_path = os.path.relpath(md_file, target_path)
-                  
-                  day_string += "[{}]({}#{}) ".format(day,as_posix(rel_path),day)
+                      
+                  day_string += "[{}#{}]({}#{}) ".format(md,day,as_posix(rel_path),day)
          day_string = day_string.strip().replace(" ", ", ")
          git_string += "    * {}\n".format(day_string)
+             
    glossar_string = "# Glossary\n\n"
    
    readme_file = as_posix(os.path.join(target_path,"README.md"))
@@ -565,17 +577,38 @@ def create_JSON_representation(target_path):
     '''
     1. step: Find all the .md-files in the directory
     '''
-    rootdir = target_path
-    regex   = re.compile(r'(UKE-\d{2}\.md$)')
     
-    md_files = []
+    exclude_files = ['README.md', "ARKIV.md", "ARCHIVE.md", "GLOSSARY.md"] # Exclude ADMIN files
+    
+    rootdir      = target_path
+    regex_week   = re.compile(r'(UKE-\d{2}\.md$)')
+    regex_md     = re.compile(r'(.+\.md$)')
+    
+    all_files = {'years': {}, 'others': {}}
+    tags_global = {}#years['tags']
+
+    week_files = [] # All UKE-XX.md files
+    md_files   = [] # All other .md files
     
     for root, dirs, files in os.walk(rootdir):
         for file in files:
-            if regex.match(file):
+            if regex_week.match(file):
                 reldir = os.path.relpath(root,rootdir)
                 year   = re.findall(r'\d{4}',reldir,0)
-                md_files.append([year[0],os.path.join(root,file)])
+                if year: 
+                   week_files.append([year[0],as_posix(os.path.join(root,file))])
+            elif regex_md.match(file):
+                if file not in exclude_files:
+                   reldir = as_posix(os.path.relpath(os.path.join(os.path.join(root,file)),target_path))
+                   id = os.path.basename(file)
+                   id = os.path.splitext(id)
+                   id = str(id[0])
+                   
+                   if not id in all_files['others']:
+                      all_files['others'][id] = {'days': {}, 'file': ""} 
+                   
+                   md_files.append([id,as_posix(os.path.join(root,file))])
+                   all_files['others'][id]['file'] = reldir
                 
     '''
     2. Make a representation of the timeline of all files and their contents
@@ -587,12 +620,8 @@ def create_JSON_representation(target_path):
        ]
     }
     '''
-    
-    years = {'years': {}}
-    tags_global = {}#years['tags']
-    
-    for md in md_files:
-        with open(md[1],encoding="utf-8") as f:
+    for week_md in week_files:
+        with open(week_md[1],encoding="utf-8") as f:
             '''
             Each .md file represents a week.
             '''
@@ -607,9 +636,9 @@ def create_JSON_representation(target_path):
             '''
             Finding year number.
             '''
-            year_num     = md[0]
-            if not year_num in years['years']: # Check for JSON object
-               years['years'][year_num] = {"weeks": {}}
+            year_num     = week_md[0]
+            if not year_num in all_files['years']: # Check for JSON object
+               all_files['years'][year_num] = {"weeks": {}}
             
             '''
             Finding week number.
@@ -620,9 +649,9 @@ def create_JSON_representation(target_path):
                res = re.findall(regex_week,text)
                if res:
                   week_num = int(res[0])
-            if not week_num in years['years'][year_num]['weeks']: # Check for JSON object
-               years['years'][year_num]['weeks'][week_num] = {'days': {}}
-            week = years['years'][year_num]['weeks'][week_num]
+            if not week_num in all_files['years'][year_num]['weeks']: # Check for JSON object
+               all_files['years'][year_num]['weeks'][week_num] = {'days': {}}
+            week = all_files['years'][year_num]['weeks'][week_num]
             
             '''
             Finding all the days of the week.
@@ -631,7 +660,7 @@ def create_JSON_representation(target_path):
             regex_days = re.compile(r"^#{2}\s+(\d{4}-\d{2}-\d{2})$", re.IGNORECASE and re.MULTILINE)
             days = re.findall(regex_days, text)
             for day in days:
-               if not day in week: # Check for JSON object
+               if not day in week['days']: # Check for JSON object
                   week['days'][day] = None
 
             '''
@@ -691,23 +720,109 @@ def create_JSON_representation(target_path):
             Preparing for JSON
             '''
             
-            week['file'] = as_posix(os.path.relpath(md[1],rootdir))
-            years['years'][year_num]['weeks'][week_num] = week
+            week['file'] = as_posix(os.path.relpath(week_md[1],rootdir))
+            all_files['years'][year_num]['weeks'][week_num] = week
+    
+    '''
+    3. Processing all other .md files that are not ADMIN.
+    '''
+    for md_file in md_files:
+        with open(md_file[1],encoding="utf-8") as f:
+           
+            '''
+            Each .md file represents ??
+            '''
+            
+            text = f.read()
+            
+            year_num  = 0  
+            week_num  = 0
+            days      = []  
+            tags_week = set({})
+            id        = md_file[0]
+            
+            if not id in all_files['others']:
+               all_files['others'][id] = {'days': {}}
+            md = all_files['others'][id]
+            
+            '''
+            Finding all the days of the week.
+            '''
+            regex_days = re.compile(r"^#{2}\s+(\d{4}-\d{2}-\d{2})$", re.IGNORECASE and re.MULTILINE)
+            days = re.findall(regex_days, text)
+            for day in days:
+               if not day in md['days']: # Check for JSON object
+                  md['days'][day] = None
+
+            '''
+            Finding the corresponding paragraph for each day.
+            Each paragraph starts with an h2 following the pattern YYYY-MM-DD.
+            Each paragraph finishes at the next date or the end of the file.
+            '''            
+            regex_pars = re.compile(r"(?:#{2}\s+\d{4}-\d{2}-\d{2})([\s\S]*?)(?=#{2}\s+\d{4}-\d{2}-\d{2}|\Z)", re.MULTILINE)
+            res_pars = re.findall(regex_pars,text)
+            if res_pars:
+               # There should be as many paragraphs as days above. 
+               i = 0;
+               for par in res_pars:
+                  # Each paragraph corresponds to a day extracted above. 
+                  tags_md = set({})
+                  
+                  '''
+                  Find all the lines with tags.
+                  It is possible to have multiple lines with tags.
+                  '''
+                  regex_tags = re.compile(r"(Tags:.*(?=\n|$))+")
+                
+                  res_tags = re.findall(regex_tags,par)
+                  if res_tags:
+                     for r in res_tags:
+                        '''
+                        Extract all individual tag from each tags line.
+                        '''
+                        tags = re.findall('#(\w+)',r)
+                        if tags:
+                           tags_md.update(tags) # Daily tags. Avoid duplicate tags for each day.
+                           
+                           for tag in tags: # Global tags.
+                                                             
+                              if not tag in tags_global:
+                                 tags_global[tag] = {'others': {}}
+                              if not 'others' in tags_global[tag]:
+                                 tags_global[tag]['others'] = {} 
+                              
+                              if not id in tags_global[tag]['others']:
+                                 tags_global[tag]['others'][id] = {'days': []}
+                                 
+                              if not days[i] in tags_global[tag]['others'][id]['days']: # Avoid duplicate days for each tag.
+                                 tags_global[tag]['others'][id]['days'].append(days[i]) 
+                     if tags_md:
+                        if not md['days'][days[i]]:
+                           md['days'][days[i]] = {}
+                        md['days'][days[i]]['tags'] = list(sorted(tags_md)) # JSON does not like sets.
+                  i+=1 # Move on to next paragraph and thus day. 
+            
+            '''
+            Preparing for JSON
+            '''
+            md['file'] = as_posix(os.path.relpath(md_file[1],rootdir))
+            all_files['others'][id] = md    
+    
     if tags_global:
        tags_global = dict(sorted(tags_global.items()))
-       years['tags'] = tags_global
-
+       all_files['tags'] = tags_global
+    
     '''
-    3. Dumping into JSON file
+    4. Dumping into JSON file
     '''
     
     json_file = os.path.join(rootdir,'DUMP.JSON')
-    json_obj = json.dumps(years, indent=3) 
+    json_obj = json.dumps(all_files, indent=3) 
     
     with open(json_file,"w") as outfile:
-       json.dump(years,outfile,indent=3)
+       json.dump(all_files,outfile,indent=3)
     
-    print('Ending script')
+    print('Ending script.')
 
 if __name__=='__main__':
   organize_repo()
