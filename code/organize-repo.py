@@ -111,6 +111,10 @@ def organize_repo():
       '''
       
       update_images(json_file,target_path)
+
+def get_view_file(json_obj,target_path,img_path):
+
+   pass
       
 def update_images(json_file,target_path):
    
@@ -131,7 +135,9 @@ def update_images(json_file,target_path):
    for root, dirs, files in os.walk(rootdir):
       for file in files:
          if regex_imgs.match(file):# and not regex_thumbs.match(file):
-            img_path = os.path.join(root,file)
+            img_path = as_posix(os.path.join(root,file))
+            #rel_path = os.path.relpath(img_path,target_path)
+            rel_path = img_path
             date_str = re.findall(r'(\d{4}-\d{2}-\d{2})',root)#[-1] # Find date from folder since images might have different dates.
             hasThumb = False
             
@@ -158,13 +164,13 @@ def update_images(json_file,target_path):
             year      = str(date.year)
             week      = str(date.isocalendar()[1])
             year      = str(date.isocalendar()[0])
-            week_file = ''
+            view_file = ''
             if 'years' in json_obj:
                if str(year) in json_obj['years']:
                   if 'weeks' in json_obj['years'][year]:
                      if week in json_obj['years'][year]['weeks']:
                         if 'file' in json_obj['years'][year]['weeks'][week]:
-                           week_file = json_obj['years'][year]['weeks'][week]['file']
+                           view_file = json_obj['years'][year]['weeks'][week]['file']
                         else: 
                            print('"file" could not be found in ',json_obj['years'][year]['weeks'][week])
                            continue
@@ -178,11 +184,11 @@ def update_images(json_file,target_path):
                   print(year, ' could not be found in ', json_obj['years'])
                   continue
                
-            if not week_file:
+            if not view_file:
                print("The week file could not be found: {}.".format(json_obj['years'][year]['weeks'][week]))
                continue
             
-            week_file = os.path.join(target_path,week_file) 
+            view_file = os.path.join(target_path,view_file) 
             
             if hasThumb:
                if not year in weekly_img_files_thumbs:
@@ -190,11 +196,11 @@ def update_images(json_file,target_path):
                
                if not week in weekly_img_files_thumbs[year]:
                   img_files = []
-                  img_files.append(img_path)
-                  weekly_img_files_thumbs[year][week] = {'file': week_file, 'images': img_files}
+                  img_files.append(rel_path)
+                  weekly_img_files_thumbs[year][week] = {'file': view_file, 'images': img_files}
                else:
-                  weekly_img_files_thumbs[year][week]['file'] = week_file
-                  weekly_img_files_thumbs[year][week]['images'].append(img_path)
+                  weekly_img_files_thumbs[year][week]['file'] = view_file
+                  weekly_img_files_thumbs[year][week]['images'].append(rel_path)
    
             else:
                if not year in weekly_img_files:
@@ -202,11 +208,11 @@ def update_images(json_file,target_path):
                
                if not week in weekly_img_files[year]:
                   img_files = []
-                  img_files.append(img_path)
-                  weekly_img_files[year][week] = {'file': week_file, 'images': img_files}
+                  img_files.append(rel_path)
+                  weekly_img_files[year][week] = {'file': view_file, 'images': img_files}
                else:
-                  weekly_img_files[year][week]['file'] = week_file
-                  weekly_img_files[year][week]['images'].append(img_path)
+                  weekly_img_files[year][week]['file'] = view_file
+                  weekly_img_files[year][week]['images'].append(rel_path)
    
    if not weekly_img_files: 
       print("No images without thumbnails have been found.")
@@ -219,14 +225,47 @@ def update_images(json_file,target_path):
                pass#print(img)
             
    if not weekly_img_files_thumbs:
-      print("No images without thumbnails have beenfound.")
+      print("No images with thumbnails have been found.")
    else: 
       for year,weeks in weekly_img_files_thumbs.items():
          for week,imgs in weeks.items():
-            file = imgs['file']
-            #print(file)
+            view_file = imgs['file']
+            
+            new_imgs_string  = ""
+            paragraph_string = "## New images\n\n" 
+            f  = open(view_file,"r",encoding="utf-8")
+            text = f.read()
+            f.close()
+            
+            text = find_paragraphs(2,r'New images',"",text).strip()
+
+            git_string = ""
             for img in imgs['images']:
-               pass#print(img)
+               rel_path  = as_posix(os.path.relpath(img, os.path.dirname(view_file))) 
+               #print(rel_path)
+               regex_img = re.compile(r'.+{}.+'.format(rel_path),re.IGNORECASE)
+               if regex_img.findall(text):
+                  continue
+               else:
+                  title      = os.path.splitext(os.path.basename(rel_path))[0]
+                  regex_desc = r'^\d{4}-\d{2}-\d{2}_(.+)$'
+                  descs      = re.findall(r'^(\d{4}-\d{2}-\d{2})_(.+)$',title)
+                  if descs:
+                     title = "{} ({})".format(descs[0][0],descs[0][1])
+                  title = title.replace('.jpg','').replace('.png','')
+                  rel_thumb   = rel_path.replace('.jpg','_thumb.jpg').replace('.png','_thumb.png')
+                  git_string += "[![{}]({})]({})\n".format(title,rel_thumb,rel_path) 
+            
+            if not git_string:
+               print("No new images will be added for week {}.".format(week))
+               continue
+
+            paragraph_string += git_string + "\n[This list has been generated automatically.]" 
+            new_imgs_string = find_paragraphs(2,r'New images',paragraph_string,text)
+
+            f = open(view_file,"w",encoding="utf-8")
+            f.write(new_imgs_string)     
+            f.close()
 
 def find_paragraphs(h_level,header,repl_string,text):
    
@@ -240,7 +279,6 @@ def find_paragraphs(h_level,header,repl_string,text):
       res = text + "\n\n" + repl_string
       
    return res
-    
 
 def update_UKEXX_files(json_file,target_path):
     
@@ -276,12 +314,14 @@ def update_UKEXX_files(json_file,target_path):
                       days =  json_obj['years'][year]['weeks'][week]['days']
                       i = 0
                       for k,v in days.items():
-                          git_string += "* [{}](#{})".format(k,k)+ ("\n" if i!=len(days.items())-1 else "")
+                          git_string += "* [{}](#{})\n".format(k,k)#+ ("\n" if i!=len(days.items())-1 else "")
                           i += 1 
                    
                    f  = open(week_file,"r",encoding="utf-8")
                    text = f.read()
                    f.close()
+                   
+                   git_string += "\n[This overview has been generated automatically.]"
                    
                    overview_string = find_paragraphs(2,r'Oversikt',git_string,text)
                    
@@ -319,7 +359,7 @@ def update_UKEXX_files(json_file,target_path):
       else:
          navigation_string += "\n\n" 
           
-      header_string += navigation_string+'[This header has been computed automatically.]'
+      header_string += navigation_string+'[This header has been generated automatically.]'
       
       f = open(week_file,"r",encoding="utf-8")
       text = f.read()
@@ -367,7 +407,7 @@ def update_GLOSSARY_file(json_file,target_path):
    rel_path = as_posix(os.path.relpath(readme_file,os.path.dirname(glossar_file)))
    glossar_string += "[Home]({})\n\n".format(rel_path)
    
-   glossar_string += "This glossary has been computed automatically.\n\n## Overview\n\n{}".format(git_string)
+   glossar_string += "[This glossary has been generated  automatically.]\n\n## Overview\n\n{}".format(git_string)
    
    g = open(glossar_file,"w")
    g.write(glossar_string)
@@ -389,7 +429,7 @@ def update_ARKIV_file(json_file,target_path):
    if not os.path.exists(archive_file):
       f = open(archive_file,"w")
       f.close()
-      archive_string += "# Archive \n\n"
+      archive_string += "# Archive\n\n"
    overview_string = "##  Overview\n\n"
    git_string = ""
    
@@ -413,7 +453,7 @@ def update_ARKIV_file(json_file,target_path):
                   for day in json_obj['years'][year]['weeks'][week]['days']:
                      git_string += "          * [{}]({}#{})\n".format(day,week_file,day)
 
-   overview_string += git_string+'\n[This overview has been computed automatically.]'
+   overview_string += git_string+'\n[This overview has been generated automatically.]'
 
    f = open(archive_file,"r",encoding="utf-8")
    text = f.read()
@@ -466,7 +506,7 @@ def update_README_file(json_file,target_path):
       else:
          git_string += "* {}/\n".format(url) # Directories do not have links.
    
-   overview_string += git_string+'\n[This overview has been computed automatically.]'
+   overview_string += git_string+'\n[This overview has been generated automatically.]'
       
    '''
    Replace existing overview section indicated by "## Overview"
