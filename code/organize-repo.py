@@ -44,6 +44,8 @@ def organize_repo():
  
    parser.add_argument("-p", "--path", help="Path to the target git repository. Default: Current folder.", default='.')
    parser.add_argument('-f', '--force', help="Forces the recomputation of the JSON.DUMP file. Default: False", action='store_true')
+   parser.add_argument('-i', '--img', help="Find all nw img fles in repo and prsenting them on the page. Default: False", action='store_true')
+   
    #parser.add_argument()
    args = parser.parse_args()
  
@@ -64,6 +66,7 @@ def organize_repo():
    '''
   
    force=args.force # if True, compute DUMP.JSON
+   img  =args.img
    json_file = os.path.join(target_path,'DUMP.JSON')
    
    if force or not os.path.exists(json_file): 
@@ -100,6 +103,130 @@ def organize_repo():
       Update overview in README.md file
       '''
       update_README_file(json_file, target_path)
+   
+   if img:
+      
+      '''
+      Finding all new images and including the on .md pages
+      '''
+      
+      update_images(json_file,target_path)
+      
+def update_images(json_file,target_path):
+   
+   if not os.path.exists(json_file):
+      print("Error. JSON file does not exist. This is needed for updating images.")
+      return 
+   
+   f        = open(json_file,'r')
+   json_obj = json.loads(f.read())
+   f.close()
+   
+   rootdir = target_path
+   regex_imgs   = re.compile(r'(.+\.jpg$)|(.+\.png)',re.IGNORECASE)
+   regex_thumbs = re.compile(r'.+(_thumb).+',re.IGNORECASE) # Exclude all thumbs for now.
+   
+   weekly_img_files        = {} # Contains all images without thumbnails
+   weekly_img_files_thumbs = {} # Contains all images with thumbnails
+   for root, dirs, files in os.walk(rootdir):
+      for file in files:
+         if regex_imgs.match(file):# and not regex_thumbs.match(file):
+            img_path = os.path.join(root,file)
+            date_str = re.findall(r'(\d{4}-\d{2}-\d{2})',root)#[-1] # Find date from folder since images might have different dates.
+            hasThumb = False
+            
+            if regex_thumbs.match(file):
+               check_path = re.sub(r'_thumb','',img_path)
+               if os.path.exists(check_path): 
+                  #print('Moving on')
+                  continue # Moving on because image file will be handled elsewhere.
+               else:
+                  hasThumb = False # The file is the file and thumbnail at once.
+            else:
+               stem,ext   = os.path.splitext(img_path)
+               check_path = os.path.join(stem+"_thumb"+ext)  
+               hasThumb = True if os.path.exists(check_path) else False    
+            
+            if not date_str: continue
+            date_str = date_str[-1] # Only get the last one.
+            try: 
+               date  = datetime.datetime.strptime(date_str,'%Y-%m-%d')
+            except:
+               print("Something went wrong")
+               continue
+            
+            year      = str(date.year)
+            week      = str(date.isocalendar()[1])
+            year      = str(date.isocalendar()[0])
+            week_file = ''
+            if 'years' in json_obj:
+               if str(year) in json_obj['years']:
+                  if 'weeks' in json_obj['years'][year]:
+                     if week in json_obj['years'][year]['weeks']:
+                        if 'file' in json_obj['years'][year]['weeks'][week]:
+                           week_file = json_obj['years'][year]['weeks'][week]['file']
+                        else: 
+                           print('"file" could not be found in ',json_obj['years'][year]['weeks'][week])
+                           continue
+                     else: 
+                        print(week,' could not be found in ',json_obj['years'][year]['weeks'])
+                        continue
+                  else: 
+                     print('"weeks" could not be found in ',json_obj['years'][year])
+                     continue
+               else: 
+                  print(year, ' could not be found in ', json_obj['years'])
+                  continue
+               
+            if not week_file:
+               print("The week file could not be found: {}.".format(json_obj['years'][year]['weeks'][week]))
+               continue
+            
+            week_file = os.path.join(target_path,week_file) 
+            
+            if hasThumb:
+               if not year in weekly_img_files_thumbs:
+                  weekly_img_files_thumbs[year] = {}
+               
+               if not week in weekly_img_files_thumbs[year]:
+                  img_files = []
+                  img_files.append(img_path)
+                  weekly_img_files_thumbs[year][week] = {'file': week_file, 'images': img_files}
+               else:
+                  weekly_img_files_thumbs[year][week]['file'] = week_file
+                  weekly_img_files_thumbs[year][week]['images'].append(img_path)
+   
+            else:
+               if not year in weekly_img_files:
+                  weekly_img_files[year] = {}
+               
+               if not week in weekly_img_files[year]:
+                  img_files = []
+                  img_files.append(img_path)
+                  weekly_img_files[year][week] = {'file': week_file, 'images': img_files}
+               else:
+                  weekly_img_files[year][week]['file'] = week_file
+                  weekly_img_files[year][week]['images'].append(img_path)
+   
+   if not weekly_img_files: 
+      print("No images without thumbnails have been found.")
+   else: 
+      for year,weeks in weekly_img_files.items():
+         for week,imgs in weeks.items():
+            file = imgs['file']
+            #print(file)
+            for img in imgs['images']:
+               pass#print(img)
+            
+   if not weekly_img_files_thumbs:
+      print("No images without thumbnails have beenfound.")
+   else: 
+      for year,weeks in weekly_img_files_thumbs.items():
+         for week,imgs in weeks.items():
+            file = imgs['file']
+            #print(file)
+            for img in imgs['images']:
+               pass#print(img)
 
 def find_paragraphs(h_level,header,repl_string,text):
    
