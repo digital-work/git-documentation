@@ -1,7 +1,7 @@
 '''
   Created on 10. jan 2023.
   
-  Last updated on 15. jan. 2023.
+  Last updated on 11. jan. 2023.
   
   @author. joschua
 '''
@@ -18,6 +18,17 @@ import json
 import datetime
 from dateutil.relativedelta import relativedelta
 import locale
+
+lang_dict = {
+   'overview': {
+         'en': "Overview",
+         'no': "Oversikt" 
+      },
+   'archive': {
+         'en': "Archive",
+         'no': "Arkiv" 
+      }
+   }
 
 def get_month_str(year,week):
    
@@ -382,7 +393,9 @@ def update_UKEXX_files(json_file,target_path):
                    week_count += 1
                    week_list.append((week,week_file))
                    
-                   git_string = "## Oversikt\n\n" 
+                   week_string    = ""
+                   overview_strig = ""
+                   git_string     = "" 
                    if 'days' in json_obj['years'][year]['weeks'][week]:
                       days =  json_obj['years'][year]['weeks'][week]['days']
                       i = 0
@@ -394,12 +407,26 @@ def update_UKEXX_files(json_file,target_path):
                    text = f.read()
                    f.close()
                    
-                   git_string += "\n[This overview has been generated automatically.]"
+                   lan = 'en'
+                   if re.search(r'#{2}\s+%s' % lang_dict['overview']['en'],text):
+                      lang = 'en'
+                   elif re.search(r'#{2}\s+%s' % lang_dict['overview']['no'],text):
+                      lan = 'no'
+                   overview_string = "## %s\n\n" % lang_dict['overview'][lan]
+                   overview_string += git_string+'\n[This overview has been generated automatically.]'
                    
-                   overview_string = find_paragraphs(2,r'Oversikt',git_string,text)
+                   regex_pars = re.compile(r"(?:#{2}\s+%s)([\s\S]*?)(?=\n{2}#{2}\s+|\Z)" % lang_dict['overview'][lan], re.MULTILINE)
+                   res_pars = re.search(regex_pars,text)
+                   if res_pars:
+                      week_string = re.sub(regex_pars,overview_string,text)
+                   else: 
+                      week_string += text + '\n\n'+overview_string
+                   
+                   #git_string += "\n[This overview has been generated automatically.]"
+                   #overview_string = find_paragraphs(2,r'Oversikt',git_string,text)
                    
                    f = open(week_file,"w",encoding="utf-8")
-                   f.write(overview_string)
+                   f.write(week_string)
                    f.close()
    
    '''
@@ -515,7 +542,7 @@ def update_ARKIV_file(json_file,target_path):
       f = open(archive_file,"w")
       f.close()
       archive_string += "# Archive\n\n"
-   overview_string = "##  Overview\n\n"
+   overview_string = ""
    git_string = ""
    
    if 'years' in json_obj:
@@ -538,14 +565,24 @@ def update_ARKIV_file(json_file,target_path):
                   for day in json_obj['years'][year]['weeks'][week]['days']:
                      git_string += "          * [{}]({}#{})\n".format(day,week_file,day)
 
-   overview_string += git_string+'\n[This overview has been generated automatically.]'
-
+   """
+   Replacing existing overview or ading it to the nd of the file.
+   """
+   
    f = open(archive_file,"r",encoding="utf-8")
    text = f.read()
    f.close()
-
-   regex_pars = re.compile(r"(?:#{2}\s+Overview)([\s\S]*?)(?=\n{2}#{2}\s+|\Z)", re.MULTILINE)
-   res_pars = re.findall(regex_pars,text)
+   
+   lan = 'en'
+   if re.search(r'#{2}\s+%s' % lang_dict['overview']['en'],text):
+      lang = 'en'
+   elif re.search(r'#{2}\s+%s' % lang_dict['overview']['no'],text):
+      lan = 'no'
+   overview_string = "## %s\n\n" % lang_dict['overview'][lan]
+   overview_string += git_string+'\n[This overview has been generated automatically.]'
+   
+   regex_pars = re.compile(r"(?:#{2}\s+%s)([\s\S]*?)(?=\n{2}#{2}\s+|\Z)" % lang_dict['overview'][lan], re.MULTILINE)
+   res_pars = re.search(regex_pars,text)
    if res_pars:
       archive_string = re.sub(regex_pars,overview_string,text)
    else: 
@@ -566,7 +603,7 @@ def update_README_file(json_file,target_path):
    if not os.path.exists(readme_file):
       print("README.md does not exist. Please create file in: {}.".format(target_path))
       return
-   overview_string = "##  Overview\n\n"
+   overview_string = ""
    git_string = ""
    
    '''
@@ -590,9 +627,7 @@ def update_README_file(json_file,target_path):
          git_string += "* [{}]({})\n".format(url,rel_path) # Only files have links.
       else:
          git_string += "* {}/\n".format(url) # Directories do not have links.
-   
-   overview_string += git_string+'\n[This overview has been generated automatically.]'
-      
+    
    '''
    Replace existing overview section indicated by "## Overview"
    '''
@@ -600,9 +635,17 @@ def update_README_file(json_file,target_path):
    f = open(readme_file,"r",encoding="utf-8")
    text = f.read()
    f.close()
-    
-   regex_pars = re.compile(r"(?:#{2}\s+Overview)([\s\S]*?)(?=\n{2}#{2}\s+|\Z)", re.MULTILINE)
-   res_pars = re.findall(regex_pars,text)
+   
+   lan = 'en'
+   if re.search(r'#{2}\s+%s' % lang_dict['overview']['en'],text):
+      lang = 'en'
+   elif re.search(r'#{2}\s+%s' % lang_dict['overview']['no'],text):
+      lan = 'no'
+   overview_string = "## %s\n\n" % lang_dict['overview'][lan]
+   overview_string += git_string+'\n[This overview has been generated automatically.]'
+   
+   regex_pars = re.compile(r"(?:#{2}\s+%s)([\s\S]*?)(?=\n{2}#{2}\s+|\Z)" % lang_dict['overview'][lan], re.MULTILINE)
+   res_pars = re.search(regex_pars,text)
    if res_pars:
       readme_string = re.sub(regex_pars,overview_string,text)
    else: 
