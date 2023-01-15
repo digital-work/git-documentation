@@ -341,7 +341,6 @@ def get_md_files_tree(path_):
    
    tree = []
    for root, dirs, files in os.walk(path_):
-      #tree = {}
       for d in dirs:
          if not regex_dirs.match(d):
             #tree.update({d: get_md_files_tree(os.path.join(root, d))})
@@ -421,9 +420,6 @@ def update_UKEXX_files(json_file,target_path):
                       week_string = re.sub(regex_pars,overview_string,text)
                    else: 
                       week_string += text + '\n\n'+overview_string
-                   
-                   #git_string += "\n[This overview has been generated automatically.]"
-                   #overview_string = find_paragraphs(2,r'Oversikt',git_string,text)
                    
                    f = open(week_file,"w",encoding="utf-8")
                    f.write(week_string)
@@ -662,7 +658,6 @@ def walk_for_README_overview(arr,d,path):
       file_path = as_posix(file_path)
       arr.append((k,file_path)) 
       if type(v) == dict:   # option 1 with "type()"
-      #if isinstance(v, dict):   # option 2 with "isinstance()"
          new_path = os.path.join(path,k)
          new_path = as_posix(new_path)
          walk_for_README_overview(arr,v,new_path)
