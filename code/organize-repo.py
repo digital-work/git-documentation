@@ -1,7 +1,7 @@
 '''
   Created on 10. jan 2023.
   
-  Last updated on 11. jan. 2023.
+  Last updated on 15. jan. 2023.
   
   @author. joschua
 '''
@@ -45,6 +45,7 @@ def organize_repo():
    parser.add_argument("-p", "--path", help="Path to the target git repository. Default: Current folder.", default='.')
    parser.add_argument('-f', '--force', help="Forces the recomputation of the JSON.DUMP file. Default: False", action='store_true')
    parser.add_argument('-i', '--img', help="Find all nw img fles in repo and prsenting them on the page. Default: False", action='store_true')
+   parser.add_argument('-t', '--tables', help="Create image tables. Default: False", action='store_true')
    
    #parser.add_argument()
    args = parser.parse_args()
@@ -65,8 +66,9 @@ def organize_repo():
    Check if JSON representation already exists.
    '''
   
-   force=args.force # if True, compute DUMP.JSON
-   img  =args.img
+   force  = args.force # if True, compute DUMP.JSON
+   img    = args.img
+   tables = args.tables
    json_file = os.path.join(target_path,'DUMP.JSON')
    
    if force or not os.path.exists(json_file): 
@@ -111,6 +113,9 @@ def organize_repo():
       '''
       
       update_images(json_file,target_path)
+   if tables:
+      
+      update_image_tables(json_file,target_path)
 
 def get_view_file(json_obj,target_path,img_path):
 
@@ -144,7 +149,6 @@ def update_images(json_file,target_path):
             if regex_thumbs.match(file):
                check_path = re.sub(r'_thumb','',img_path)
                if os.path.exists(check_path): 
-                  #print('Moving on')
                   continue # Moving on because image file will be handled elsewhere.
                else:
                   hasThumb = False # The file is the file and thumbnail at once.
@@ -220,9 +224,8 @@ def update_images(json_file,target_path):
       for year,weeks in weekly_img_files.items():
          for week,imgs in weeks.items():
             file = imgs['file']
-            #print(file)
             for img in imgs['images']:
-               pass#print(img)
+               pass
             
    if not weekly_img_files_thumbs:
       print("No images with thumbnails have been found.")
@@ -242,7 +245,6 @@ def update_images(json_file,target_path):
             git_string = ""
             for img in imgs['images']:
                rel_path  = as_posix(os.path.relpath(img, os.path.dirname(view_file))) 
-               #print(rel_path)
                regex_img = re.compile(r'.+{}.+'.format(rel_path),re.IGNORECASE)
                if regex_img.findall(text):
                   continue
@@ -257,8 +259,9 @@ def update_images(json_file,target_path):
                   git_string += "[![{}]({})]({})\n".format(title,rel_thumb,rel_path) 
             
             if not git_string:
-               print("No new images will be added for week {}.".format(week))
                continue
+            else:
+               print("New images will be added for week {}.".format(week))
 
             paragraph_string += git_string + "\n[This list has been generated automatically.]" 
             new_imgs_string = find_paragraphs(2,r'New images',paragraph_string,text)
@@ -267,13 +270,83 @@ def update_images(json_file,target_path):
             f.write(new_imgs_string)     
             f.close()
 
+def update_image_tables(json_file,target_path):
+   
+   '''
+   Get a list of all .md fils
+   ''' 
+   
+   rootdir = target_path
+   regex   = re.compile(r'(.+\.md$)',re.IGNORECASE) # Only list .md and .pdf files
+            
+   file_tree = get_md_files_tree(target_path)
+   git_string = ""
+   
+   for file in file_tree:
+      
+      success = 0
+      f       = open(file,"r",encoding="utf-8")
+      text    = f.read()
+      f.close()
+      
+      regex = r'.jpg\)\n\[!\['
+      if re.findall(regex,text):
+         success = 1
+         text    = re.sub(regex,'.jpg)|[![',text)
+      regex = r'\n\[!\['
+      if re.findall(regex,text):
+         success = 1
+         text    = re.sub(regex,'\n|[![',text)
+      regex = r'.jpg\)\Z'
+      if re.findall(regex,text):
+         success = 1
+         text = re.sub(regex,'.jpg)|',text)
+      regex = r'.jpg\)\n'
+      if re.findall(regex,text):
+         success = 1
+         text = re.sub(regex,'.jpg)|\n',text)
+      
+      # Do not put single images in tables.
+      text = re.sub(r'\n\|([^|]*)\|\Z',r'\n\1',text) # Mid text
+      text = re.sub(r'\n\|([^|]*)\|\n',r'\n\1\n',text) # End text
+      
+      text = re.sub(r'\)\|\n\n\|\[',r')|\n|[',text) # Remove new line between table rows.
+      
+      text = re.sub(r'\n\n(\|[^|]+\.jpg[^|]+\|[^|]+\.jpg[^|]+\|\n)',r'\n\n|||\n|:-:|:-:|\n\1',text) # Make prefix for two column tables
+      text = re.sub(r'\n\n(\|[^|]+\.jpg[^|]+\|[^|]+\.jpg[^|]+\|[^|]+\.jpg[^|]+\|\n)',r'\n\n||||\n|:-:|:-:|:-:|\n\1',text) # Make prfix for three column tables.
+      
+      f = open(file,"w",encoding="utf-8")
+      f.write(text)
+      f.close()
+        
+def get_md_files_tree(path_):
+   '''
+   Source: https://stackoverflow.com/questions/9727673/list-directory-tree-structure-in-python
+   '''
+   
+   file_token  = ''
+   regex_files = re.compile(r'(.+\.md$)',re.IGNORECASE)
+   regex_dirs  = re.compile(r'^\..+|^media',re.IGNORECASE)
+   
+   tree = []
+   for root, dirs, files in os.walk(path_):
+      #tree = {}
+      for d in dirs:
+         if not regex_dirs.match(d):
+            #tree.update({d: get_md_files_tree(os.path.join(root, d))})
+            tree += get_md_files_tree(as_posix(os.path.join(root, d)))
+      for f in files:
+         if regex_files.match(f):
+            #print(os.path.join(root,f))
+            tree.append(as_posix(os.path.join(root,f)))
+      return tree  # note we discontinue iteration trough os.walk      
+
 def find_paragraphs(h_level,header,repl_string,text):
    
    regex_pars = re.compile(r"(?:#{"+str(h_level)+"}\s+"+header+")([\s\S]*?)(?=\n{2}#{2}\s+|\Z)", re.MULTILINE) # 
    res_pars   = re.findall(regex_pars,text)
    res        = ""
    if res_pars:
-      #print(repl_string) 
       res = re.sub(regex_pars,repl_string,text)
    else: 
       res = text + "\n\n" + repl_string
