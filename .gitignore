@@ -1,8 +1,10 @@
 .DS_Store
 .project
 .settings
-.pydevproject
 *.md.html
+
+.pydevproject
+*.pyc
 
 *.aux
 *.bbl
