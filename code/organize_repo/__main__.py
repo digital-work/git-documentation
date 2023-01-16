@@ -78,15 +78,15 @@ def organize_repo():
  
    target_path = args.path
    try: 
-       if not os.path.exists(target_path):
-          raise Exception("PathError. Chosen target path does not exist: {}".format(target_path))
-       if call(["git", "branch"], cwd=target_path, stderr=STDOUT, stdout=open(os.devnull, 'w')) != 0:
-          raise Exception("TypeError. Chosen directory is not a git repository: {}".format(target_path))
-       else:
-           print("Repo git check passed: {}.".format(target_path))
+      if not os.path.exists(target_path):
+         raise Exception("PathError. Chosen target path does not exist: {}".format(target_path))
+      if call(["git", "branch"], cwd=target_path, stderr=STDOUT, stdout=open(os.devnull, 'w')) != 0:
+         raise Exception("TypeError. Chosen directory is not a git repository: {}".format(target_path))
+      else:
+         print("Repo git check passed: {}.".format(target_path))
    except Exception as e:
-       print("An error occured: {}.".format(e))    
-       return
+      print("An error occured: {}.".format(e))    
+      return
    
    '''
    Check if JSON representation already exists.
@@ -139,6 +139,7 @@ def organize_repo():
       '''
       
       images.update_images(json_file,target_path)
+      
    if tables:
       
       images.update_image_tables(json_file,target_path)
@@ -604,7 +605,7 @@ def create_JSON_representation(target_path):
                   
                   if tags_day:
                      if not week['days'][days[i]]:
-                         week['days'][days[i]] = {}
+                        week['days'][days[i]] = {}
                      week['days'][days[i]]['tags'] = list(sorted(tags_day)) # JSON does not like sets.
                i+=1 # mMve on to next paragraph and thus day. 
             if tags_week:

@@ -15,7 +15,7 @@ import datetime
 import json
 import re
 
-from tools import as_posix, find_paragraphs
+from organize_repo.tools import as_posix, find_paragraphs
 
 def update_images(json_file,target_path):
    
