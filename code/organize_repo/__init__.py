@@ -17,5 +17,6 @@
      * Adding image tables. 
 '''
 
-import organize_repo.images
-import organize_repo.tools
+#import organize_repo.images
+#import organize_repo.navigation
+#import organize_repo.tools
