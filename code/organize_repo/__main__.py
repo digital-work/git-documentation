@@ -26,11 +26,9 @@ import re
 import pathlib
 import json
 
-import datetime
-from dateutil.relativedelta import relativedelta
-import locale
 
-from tools import find_paragraphs
+
+from tools import as_posix, find_paragraphs, get_month_str
 
 lang_dict = {
    'overview': {
@@ -42,27 +40,6 @@ lang_dict = {
          'no': "Arkiv" 
       }
    }
-
-import images
-
-def get_month_str(year,week):
-   
-   month_str = ""
-   
-   date = datetime.date(int(year), 1, 1) + relativedelta(weeks=+int(week))
-   
-   locale.setlocale(locale.LC_TIME, 'no_NO.UTF-8')
-   month_id  = date.strftime("%m")
-   month     = date.strftime("%B").capitalize()
-   month_str = "{}_{}".format(month_id,month)
-   
-   return month_id, month_str
-
-def as_posix(path):
-    
-   path = pathlib.PurePath(path).as_posix()
-   
-   return path
 
 def organize_repo():
     

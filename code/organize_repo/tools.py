@@ -12,6 +12,10 @@ import pathlib
 
 import re
 
+import datetime
+from dateutil.relativedelta import relativedelta
+import locale
+
 def as_posix(path):
     
    path = pathlib.PurePath(path).as_posix()
@@ -29,3 +33,16 @@ def find_paragraphs(h_level,header,repl_string,text):
       res = text + "\n\n" + repl_string
       
    return res
+
+def get_month_str(year,week):
+   
+   month_str = ""
+   
+   date = datetime.date(int(year), 1, 1) + relativedelta(weeks=+int(week))
+   
+   locale.setlocale(locale.LC_TIME, 'no_NO.UTF-8')
+   month_id  = date.strftime("%m")
+   month     = date.strftime("%B").capitalize()
+   month_str = "{}_{}".format(month_id,month)
+   
+   return month_id, month_str
