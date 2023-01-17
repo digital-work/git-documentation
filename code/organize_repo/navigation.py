@@ -20,8 +20,6 @@ ending_to_type = {
       'JPG': 'image'
    }
 
-from itertools import chain
-
 class FileType:
    
    def __init__(self,file_type,subtype=None):
@@ -96,6 +94,8 @@ def update_navigation(target_path):
    * Update README.md-file.
    """
    
+   success = True
+   
    """
    Get list of all files in repository.
    """
@@ -124,35 +124,69 @@ def update_navigation(target_path):
       Extract type of the file.
       """
       type = get_type(file,text)
+      if type is None:
+         print("FileType could not be found for {}. Moving on to next file.\n".format(file))
+         continue
+   
+      """
+      Update inter navigation, e.g. navigation between documents.
+      """
+      text = update_inter_navigation(type,text)
       
-   
-   #type =  
-   
+      """
+      Update intra navigation, e.g. navigation within the document.
+      """
+      text = update_intra_navigation(type,text)
+      
+      """
+      Write new text to file.
+      """
+      f = open(file,"w",encoding="utf-8")
+      f.write(text)     
+      f.close()
+      
+      return success
+
+def update_inter_navigation(type,text):
    """
-   Inter
-   """
-   
-   """
-   """
-   
-   """
-   """
-   
-   """
-   """
-   
-   """
-   """
-   
-   """
+   Return text with updated inter navigation.
    """
    
+   if (type == FileType("MD", SubFileType("WEEK"))):
+      # Find previous 
+      
+      # Find Home file
+      
+      # Find next week
+      pass
+   elif (type == FileType("MD", SubFileType("ADMIN", SubFileType("README")))):
+      # Find Home File
+      pass
+   elif (type == FileType("MD", SubFileType("ADMIN", SubFileType("README")))):
+      # Find Home File
+      pass
+   elif (type == FileType("MD", SubFileType("ADMIN", SubFileType("Glossary")))):
+      # Do not do anything.
+      return text
+   else:
+      # Find Home File
+      pass
+   
+   return text
+
+def update_intra_navigation(type,text):
    """
+   Return text with updated intra navigation.
    """
    
-   """
-   """
+   # Find all level 2 headers except for Overview
    
+   # Make a list with all level 2 headers
+   
+   # Find Level 2 Overview header and replace with new list
+   
+   return text
+
 def get_all_files(target_path):
    """
    Returns all relevant files in target_path.
