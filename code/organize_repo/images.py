@@ -120,15 +120,28 @@ def update_images(json_file,target_path):
       for year,weeks in weekly_img_files.items():
          for week,imgs in weeks.items():
             file = imgs['file']
-            for img in imgs['images']:
-               pass
+            #for img in imgs['images']:
+            #   pass
             
    if not weekly_img_files_thumbs:
       print("No images with thumbnails have been found.")
-   else: 
+   else:
+      lookup_file = os.path.join(target_path,"LOOKUP.JSON")
+      
+      lookup_obj = {}
+      if os.path.exists(lookup_file):
+         l        = open(lookup_file,'r')
+         lookup_obj = json.loads(l.read())
+         l.close() 
+      
       for year,weeks in weekly_img_files_thumbs.items():
          for week,imgs in weeks.items():
             view_file = imgs['file']
+            all_files = [view_file]
+            
+            file_id = os.path.splitext(os.path.basename(view_file))[0]
+            if file_id in lookup_obj: 
+               all_files += [os.path.join(target_path,obj) for obj in lookup_obj[file_id]] 
             
             new_imgs_string  = ""
             paragraph_string = "## New images\n\n" 
@@ -138,22 +151,32 @@ def update_images(json_file,target_path):
             
             text = find_paragraphs(2,r'New images',"",text).strip()
 
-            git_string = ""
+            git_string = ""          
             for img in imgs['images']:
                rel_path  = as_posix(os.path.relpath(img, os.path.dirname(view_file))) 
                regex_img = re.compile(r'.+{}.+'.format(rel_path),re.IGNORECASE)
-               if regex_img.findall(text):
-                  continue
-               else:
-                  title      = os.path.splitext(os.path.basename(rel_path))[0]
-                  regex_desc = r'^\d{4}-\d{2}-\d{2}_(.+)$'
-                  descs      = re.findall(r'^(\d{4}-\d{2}-\d{2})_(.+)$',title)
-                  if descs:
-                     title = "{} ({})".format(descs[0][0],descs[0][1])
-                  title = title.replace('.jpg','').replace('.png','')
-                  rel_thumb   = rel_path.replace('.jpg','_thumb.jpg').replace('.png','_thumb.png')
-                  git_string += "[![{}]({})]({})\n".format(title,rel_thumb,rel_path) 
-            
+               
+               i        = 0
+               no_match = True
+               while i < len(all_files) & no_match:
+                  file = all_files[i]
+                  f        = open(file,"r", encoding="utf-8")
+                  tmp_text = f.read()
+                  f.close()
+                  if regex_img.findall(tmp_text):
+                     no_match = False
+                  else:
+                     print(view_file, week)
+                     title      = os.path.splitext(os.path.basename(rel_path))[0]
+                     regex_desc = r'^\d{4}-\d{2}-\d{2}_(.+)$'
+                     descs      = re.findall(r'^(\d{4}-\d{2}-\d{2})_(.+)$',title)
+                     if descs:
+                        title = "{} ({})".format(descs[0][0],descs[0][1])
+                     title = title.replace('.jpg','').replace('.png','')
+                     rel_thumb   = rel_path.replace('.jpg','_thumb.jpg').replace('.png','_thumb.png')
+                     git_string += "[![{}]({})]({})\n".format(title,rel_thumb,rel_path) 
+                  i +=1
+               
             if not git_string:
                continue
             else:
@@ -179,11 +202,9 @@ def get_md_files_tree(path_):
    for root, dirs, files in os.walk(path_):
       for d in dirs:
          if not regex_dirs.match(d):
-            #tree.update({d: get_md_files_tree(os.path.join(root, d))})
             tree += get_md_files_tree(as_posix(os.path.join(root, d)))
       for f in files:
          if regex_files.match(f):
-            #print(os.path.join(root,f))
             tree.append(as_posix(os.path.join(root,f)))
       return tree  # note we discontinue iteration trough os.walk     
 

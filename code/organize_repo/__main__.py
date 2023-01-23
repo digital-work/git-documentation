@@ -26,7 +26,7 @@ import re
 import pathlib
 import json
 
-
+import images
 
 from tools import as_posix, find_paragraphs, get_month_str
 
@@ -695,8 +695,6 @@ def create_JSON_representation(target_path):
       json.dump(all_files,outfile,indent=3)
    
    print('Ending script.')
-
-print('pupsi')
 
 if __name__=='__main__':
   organize_repo()
