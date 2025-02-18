@@ -19,7 +19,7 @@ def repos():
   # optional arguments
   parser.add_argument('-r', '--repo', help="Repository name.", default=None)
   parser.add_argument('-g', '--group', help="Group/organization name.")
-  parser.add_argument('-p', '--protocol', help="Protocol of the repository (https or ssh)", default="ssh")
+  parser.add_argument('-p', '--protocol', help="Protocol of the repository (https or ssh)",choices=["SSH","HTTPS"],default="SSH")
   
   args = parser.parse_args()
   
