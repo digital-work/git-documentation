@@ -85,7 +85,8 @@ def cmds():
           os.system("git merge origin-gitlab/master")
        elif args.action=="push":
           print("\n* Pushing repository: ",repo)
-          os.system("git push --all")
+          #os.system("git push --all")
+          os.system("git push")
        elif args.action=="update":
           #os.system("git pull --all --dry-run")
           os.system("git remote update")
